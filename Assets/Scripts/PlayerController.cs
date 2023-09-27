@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 1f;
+    [SerializeField] private float drag = 1f;
+    public ForceMode ForceMode;
     [SerializeField] private float rotateSpeed = 10f;
     [SerializeField] private float playerRadius = 0.7f;
     [SerializeField] private float playerHeight = 2f;
@@ -12,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float interactDistance = 2f;
 
     private Vector3 lastInteractDirection;
+    private Rigidbody rb;
     private bool canMove;
 
     public Inventory inventory;
@@ -25,10 +29,12 @@ public class PlayerController : MonoBehaviour
         lastInteractDirection = new(0f, 0f, 0f);
         inventory = GetComponent<Inventory>();
         inputController = GetComponent<InputController>();
+        rb = GetComponent<Rigidbody>();
     }
     private void Start()
     {
         inputController.OnInteract += InputController_OnInteract;
+        inputController.OnJump += InputController_OnJump;
     }
     private void Update()
     {
@@ -98,6 +104,10 @@ public class PlayerController : MonoBehaviour
                 interactable.Interact(GetComponent<PlayerController>());
             }
         }
+    }
+    private void InputController_OnJump(object sender, System.EventArgs e)
+    {
+        rb.AddForce(Vector3.up * drag, ForceMode);
     }
     private void FacingDirection(float x, float z)
     {
