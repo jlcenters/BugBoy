@@ -88,6 +88,10 @@ public class PlayerController : MonoBehaviour
 
     private void InputController_OnInteract(object sender, System.EventArgs e)
     {
+        if(!GameController.Instance.IsActiveState(GameStates.GamePlaying))
+        {
+            return;
+        }
         Vector2 inputDir = inputController.GetMovementNormalized();
         Vector3 faceDirection = new(inputDir.x, 0f, inputDir.y);
 
