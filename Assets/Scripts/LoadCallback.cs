@@ -11,7 +11,6 @@ public class LoadCallback : MonoBehaviour
     {
         if (isFirstUpdate)
         {
-
             isFirstUpdate = false;
             StartCoroutine(Loader.LoaderCallback());
         }

@@ -6,12 +6,15 @@ using UnityEngine.UI;
 public class PauseMenuUI : MonoBehaviour
 {
     [SerializeField] private Button resumeButton;
+    [SerializeField] private Button settingsButton;
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private Button confirmQuitButton;
     [SerializeField] private Button goBackButton;
 
     [SerializeField] private GameObject confirmQuitMenu;
+    [SerializeField] private GameObject settingsMenu;
+
 
     private bool quittingGame = false;
     private bool mainMenu = false;
@@ -20,10 +23,16 @@ public class PauseMenuUI : MonoBehaviour
 
     private void Awake()
     {
+        settingsMenu.SetActive(false);
+
         resumeButton.onClick.AddListener(() =>
         {
             GameController.Instance.TogglePauseMenu();
         }); 
+        settingsButton.onClick.AddListener(() =>
+        {
+            settingsMenu.SetActive(true);
+        });
         mainMenuButton.onClick.AddListener(() =>
         {
             mainMenu = true;
