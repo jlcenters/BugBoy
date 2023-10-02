@@ -9,15 +9,16 @@ using TMPro;
 public class SettingsMenuUI : MonoBehaviour
 {
     public static SettingsMenuUI Instance { get; private set; }
+    [SerializeField] private Button exitSettingsButton;
 
+    [Header("Audio Settings")]
     [SerializeField] private Button soundEffectsButton;
     [SerializeField] private TextMeshProUGUI soundEffectsText;
     [SerializeField] private Button musicButton;
     [SerializeField] private TextMeshProUGUI musicText;
-    [SerializeField] private Button exitSettingsButton;
 
+    [Header("Player Controls Settings")]
     [SerializeField] private GameObject pressToRebindObject;
-
     [SerializeField] private TextMeshProUGUI upText;
     [SerializeField] private TextMeshProUGUI leftText;
     [SerializeField] private TextMeshProUGUI downText;
@@ -36,7 +37,6 @@ public class SettingsMenuUI : MonoBehaviour
     [SerializeField] private Button toggleHWButton;
     [SerializeField] private Button attackButton;
     [SerializeField] private Button useItemButton;
-
     private bool isRebinding;
 
 
@@ -68,35 +68,35 @@ public class SettingsMenuUI : MonoBehaviour
         });
         leftButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            RebindControl(InputBindings.Left);
         });
         downButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            RebindControl(InputBindings.Down);
         });
         rightButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            RebindControl(InputBindings.Right);
         });
         jumpButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            RebindControl(InputBindings.Jump);
         });
         interactButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            RebindControl(InputBindings.Interact);
         });
         toggleHWButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            RebindControl(InputBindings.ToggleHW);
         });
         attackButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            RebindControl(InputBindings.Attack);
         });
         useItemButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            RebindControl(InputBindings.UseItem);
         });
     }
 
@@ -131,7 +131,11 @@ public class SettingsMenuUI : MonoBehaviour
     private void RebindControl(InputBindings binding)
     {
         ToggleRebindUI();
-        InputController.Instance.RebindBinding(binding, ToggleRebindUI);
+        InputController.Instance.RebindBinding(binding, () =>
+        {
+            ToggleRebindUI();
+            UpdateUI();
+        });
         UpdateUI();
     }
     private void ToggleRebindUI()

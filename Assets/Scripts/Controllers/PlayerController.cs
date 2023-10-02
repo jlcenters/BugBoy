@@ -5,24 +5,29 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private InputController inputController;
+    public Inventory inventory;
+
+    [Header("Walking")]
+    [SerializeField] private float rotateSpeed = 10f;
     [SerializeField] private float moveSpeed = 1f;
+    [SerializeField] private float playerRadius = 0.7f;
+    [SerializeField] private float playerHeight = 2f;
+    [SerializeField] private float moveDistance;
+
+    [Header("Jumping")]
     [SerializeField] private float jumpForce = 1f;
     [SerializeField] private float jumpMultiplier = 1f;
     [SerializeField] private float fallMultiplier = 1f;
     public ForceMode ForceMode;
-    [SerializeField] private float rotateSpeed = 10f;
-    [SerializeField] private float playerRadius = 0.7f;
-    [SerializeField] private float playerHeight = 2f;
-    [SerializeField] private float moveDistance;
+
+    [Header("Interactions")]
+    [SerializeField] private LayerMask interactablesLayer;
     [SerializeField] private float interactDistance = 2f;
 
     private Vector3 lastInteractDirection;
     private Rigidbody rb;
     private bool canMove;
-
-    public Inventory inventory;
-    [SerializeField] private InputController inputController;
-    [SerializeField] private LayerMask interactablesLayer;
 
 
 

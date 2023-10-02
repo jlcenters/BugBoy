@@ -21,6 +21,7 @@ public enum InputBindings
 
 public class InputController : MonoBehaviour
 {
+    private const string PLAYER_PREFS_BINDINGS = "InputBindings";
     public static InputController Instance {  get; private set; }
 
     private PlayerInputActions playerInputActions;
@@ -35,6 +36,12 @@ public class InputController : MonoBehaviour
 
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
+
+        //load input bindings
+        if (PlayerPrefs.HasKey(PLAYER_PREFS_BINDINGS))
+        {
+            playerInputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_PREFS_BINDINGS));
+        }
 
         //subscribe
         playerInputActions.Player.Interact.performed += Interact_performed;
@@ -100,36 +107,61 @@ public class InputController : MonoBehaviour
                 return playerInputActions.Player.UseItem.bindings[0].ToDisplayString();
         }
     }
-    public string RebindBinding(InputBindings binding, Action onActionRebound)
+    public void RebindBinding(InputBindings binding, Action onActionRebound)
     {
         playerInputActions.Player.Disable();
-        playerInputActions.Player.Move.PerformInteractiveRebinding(1).OnComplete(callback =>
+
+        InputAction inputAction;
+        int bindingIndex;
+
+        switch (binding)
+        {
+            default:
+            case InputBindings.Up:
+                inputAction = playerInputActions.Player.Move;
+                bindingIndex = 1;
+                break;
+            case InputBindings.Down:
+                inputAction = playerInputActions.Player.Move;
+                bindingIndex = 2;
+                break;
+            case InputBindings.Left:
+                inputAction = playerInputActions.Player.Move;
+                bindingIndex = 3;
+                break;
+            case InputBindings.Right:
+                inputAction = playerInputActions.Player.Move;
+                bindingIndex = 4;
+                break;
+            case InputBindings.Jump:
+                inputAction = playerInputActions.Player.Jump;
+                bindingIndex = 0;
+                break;
+            case InputBindings.Interact:
+                inputAction = playerInputActions.Player.Interact;
+                bindingIndex = 0;
+                break;
+            case InputBindings.ToggleHW:
+                inputAction = playerInputActions.Player.ToggleHatWheel;
+                bindingIndex = 0;
+                break;
+            case InputBindings.Attack:
+                inputAction = playerInputActions.Player.Attack;
+                bindingIndex = 0;
+                break;
+            case InputBindings.UseItem:
+                inputAction = playerInputActions.Player.UseItem;
+                bindingIndex = 0;
+                break;
+        }
+
+        inputAction.PerformInteractiveRebinding(bindingIndex).OnComplete(callback =>
         {
             callback.Dispose();
             playerInputActions.Player.Enable();
             onActionRebound();
+            PlayerPrefs.SetString(PLAYER_PREFS_BINDINGS, playerInputActions.SaveBindingOverridesAsJson());
+            PlayerPrefs.Save();
         }).Start();
-        switch (binding)
-        {
-            default:
-            case InputBindings.Left:
-                return playerInputActions.Player.Move.bindings[3].ToDisplayString();
-            case InputBindings.Right:
-                return playerInputActions.Player.Move.bindings[4].ToDisplayString();
-            case InputBindings.Up:
-                return playerInputActions.Player.Move.bindings[1].ToDisplayString();
-            case InputBindings.Down:
-                return playerInputActions.Player.Move.bindings[2].ToDisplayString();
-            case InputBindings.Jump:
-                return playerInputActions.Player.Jump.bindings[0].ToDisplayString();
-            case InputBindings.Interact:
-                return playerInputActions.Player.Interact.bindings[0].ToDisplayString();
-            case InputBindings.ToggleHW:
-                return playerInputActions.Player.ToggleHatWheel.bindings[0].ToDisplayString();
-            case InputBindings.Attack:
-                return playerInputActions.Player.Attack.bindings[0].ToDisplayString();
-            case InputBindings.UseItem:
-                return playerInputActions.Player.UseItem.bindings[0].ToDisplayString();
-        }
     }
 }
