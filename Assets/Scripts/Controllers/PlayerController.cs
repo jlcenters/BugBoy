@@ -100,9 +100,6 @@ public class PlayerController : MonoBehaviour
         return !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, direction, moveDistance);
 
     }
-
-
-
     private void InputController_OnInteract(object sender, System.EventArgs e)
     {
         if(!GameController.Instance.IsActiveState(GameStates.GamePlaying))

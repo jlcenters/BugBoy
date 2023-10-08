@@ -18,9 +18,7 @@ public enum GameStates
 
 public class GameController : MonoBehaviour
 {
-
     public static GameController Instance { get; private set; }
-
 
     public event EventHandler OnStateChange;
 
@@ -29,6 +27,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private float gameTimer = 0f;
     private float gameTime = 0f;
     private bool gamePaused = false;
+
 
 
     private void Awake()
@@ -88,9 +87,6 @@ public class GameController : MonoBehaviour
     {
         TogglePauseMenu();
     }
-
-
-
     public void TogglePauseMenu()
     {
         gamePaused = !gamePaused;

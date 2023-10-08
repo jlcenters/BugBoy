@@ -14,7 +14,8 @@ public enum InputBindings
     Interact,
     ToggleHW,
     Attack,
-    UseItem
+    UseItem,
+    Ability
 }
 
 
@@ -29,6 +30,8 @@ public class InputController : MonoBehaviour
     public event EventHandler OnInteract;
     public event EventHandler OnJump;
     public event EventHandler OnPause;
+
+
 
     private void Awake()
     {
@@ -79,9 +82,6 @@ public class InputController : MonoBehaviour
     {
         OnPause?.Invoke(this, EventArgs.Empty);
     }
-
-
-
     public string GetBindingText(InputBindings binding)
     {
         switch (binding)
