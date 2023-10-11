@@ -9,20 +9,21 @@ public class DialogueBox : MonoBehaviour
 {
     private static DialogueBox Instance;
     [SerializeField] private TextMeshPro dialogueTxt;
-    [SerializeField] private TextMeshProUGUI dialogueObject;
+    [SerializeField] private Text dObject;
+    //[SerializeField] private TextMeshProUGUI dialogueObject;
     [SerializeField] private SpriteRenderer dialogueBoxBG;
     [SerializeField] private float padding;
     [SerializeField] private TextScrollSingle textScrollSingle;
-    [SerializeField] private float typingSpeed;
+    [SerializeField] private GameObject initialDialogueBox;
 
 
 
     private void Awake()
     {
         Instance = this;
-        dialogueTxt = GetComponentInChildren<TextMeshPro>();
+        //dialogueTxt = GetComponentInChildren<TextMeshPro>();
+        dObject = GetComponentInChildren<Text>();
         dialogueBoxBG = GetComponentInChildren<SpriteRenderer>();
-
         Setup("E");
     }
 
@@ -35,12 +36,17 @@ public class DialogueBox : MonoBehaviour
 
         if (Instance.textScrollSingle != null && Instance.textScrollSingle.IsActive())
         {
+            Debug.Log("textscroll wasn't null and instance was active");
 
+            Instance.textScrollSingle.ScrollTextAndDestroy();
         }
         else
         {
+            Debug.Log("textscroll was null or instance was inactive");
+
             dialogueBoxPosition.GetComponent<DialogueBox>().Setup(text);
-            Instance.textScrollSingle = TextScroll.Init(Instance.dialogueObject, text, Instance.typingSpeed, true, false);
+            Instance.textScrollSingle = TextScroll.Init(Instance.dObject/*dialogueObject*/, text, 20f, true, false);
+            Instance.Remove();
         }
     }
     private void Setup(string dialogue)

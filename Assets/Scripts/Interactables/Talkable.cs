@@ -6,14 +6,26 @@ public class Talkable : MonoBehaviour, IInteractable
 {
     //[SerializeField] private string text;
     [SerializeField] private string[] dialogueLines;
-
+    [SerializeField] private GameObject initialBubble;
+    [SerializeField] private int dialogueLine = 0;
 
 
     public void Interact(PlayerController player)
     {
-        for (int i = 0; i < dialogueLines.Length; i++)
+        if(initialBubble.activeInHierarchy)
         {
-            DialogueBox.Talk(this.transform, new(0f, 1.5f), dialogueLines[i]);
+            Debug.Log("disabling initial dialogue bubble");
+            initialBubble.SetActive(false);
+        }
+        if(dialogueLine < dialogueLines.Length)
+        {
+            Debug.Log("calling talk function");
+            DialogueBox.Talk(this.transform, new(0f, 1.5f), dialogueLines[dialogueLine]);
+            dialogueLine++;
+            if(dialogueLine >= dialogueLines.Length)
+            {
+                dialogueLine = 0;
+            }
         }
     }
 }

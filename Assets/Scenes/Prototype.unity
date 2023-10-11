@@ -8892,6 +8892,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1113244354 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 171867872189072319, guid: e43862a5b9078d440a7ac7b56ca8df79, type: 3}
+  m_PrefabInstance: {fileID: 2160170776900173013}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1129154318
 GameObject:
   m_ObjectHideFlags: 0
@@ -20018,6 +20023,10 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 503316479
       objectReference: {fileID: 0}
+    - target: {fileID: 4935831345940297463, guid: e43862a5b9078d440a7ac7b56ca8df79, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5326970558415642264, guid: e43862a5b9078d440a7ac7b56ca8df79, type: 3}
       propertyPath: m_Animations.Array.size
       value: 0
@@ -20266,17 +20275,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4764268323371858135}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 12.51}
   m_LocalScale: {x: 0.0025, y: 0.0025, z: 0.0025}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 739269825077516978}
   - {fileID: 1780130515929869059}
-  m_Father: {fileID: 8139936984210898341}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1}
+  m_AnchoredPosition: {x: -8, y: 1}
   m_SizeDelta: {x: 600, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &6024899998041439237
@@ -20393,7 +20402,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8028323464714382911}
-  - {fileID: 5818842792446069686}
   - {fileID: 1760048220}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20506,7 +20514,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c469be834a68fc443b7456924c5d07f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueLines: []
+  dialogueLines:
+  - Hello1
+  - how are u
+  - im fine thank u
+  - goodbye
+  initialBubble: {fileID: 1113244354}
+  dialogueLine: 0
 --- !u!114 &8886983527066015437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20537,10 +20551,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueTxt: {fileID: 0}
-  dialogueObject: {fileID: 0}
+  dObject: {fileID: 0}
   dialogueBoxBG: {fileID: 0}
   padding: 0
-  typingSpeed: 0
+  initialDialogueBox: {fileID: 0}
 --- !u!1 &9002063711787886396
 GameObject:
   m_ObjectHideFlags: 0
@@ -20574,5 +20588,6 @@ SceneRoots:
   - {fileID: 8139936984210898341}
   - {fileID: 875122728}
   - {fileID: 643109102}
+  - {fileID: 5818842792446069686}
   - {fileID: 1337867215}
   - {fileID: 3294758250874222965}
