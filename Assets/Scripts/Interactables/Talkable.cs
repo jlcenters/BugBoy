@@ -1,16 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Talkable : MonoBehaviour, IInteractable
 {
-    //[SerializeField] private string text;
-    [SerializeField] private string[] dialogueLines;
-    [SerializeField] private GameObject initialBubble;
-    [SerializeField] private int dialogueLine = 0;
+    [SerializeField] private Dialogue dialogue;
+    [SerializeField] private GameObject dialogueBox;
+    [SerializeField] private TMP_Text dialogueText;    
+
 
 
     public void Interact(PlayerController player)
+    {
+        DialogueController.Instance.InitDialogue(dialogueBox, dialogueText, dialogue);
+        StartCoroutine(DialogueController.Instance.ShowDialogue());
+    }
+
+
+
+    /*public void Interact(PlayerController player)
     {
         if(initialBubble.activeInHierarchy)
         {
@@ -27,5 +36,5 @@ public class Talkable : MonoBehaviour, IInteractable
                 dialogueLine = 0;
             }
         }
-    }
+    }*/
 }

@@ -11,13 +11,15 @@ public enum GameStates
     WaitingToStart,
     GamePlaying,
     GamePause,
-    GameOver
+    GameOver,
+    InDialogue
 }
 
 
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] private DialogueController dialogueController;
     public static GameController Instance { get; private set; }
 
     public event EventHandler OnStateChange;
@@ -38,6 +40,9 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         InputController.Instance.OnPause += GameInput_OnPause;
+
+        dialogueController.OnShowDialogue += DialogueController_OnShowDialogue;
+        dialogueController.OnCloseDialogue += DialogueController_OnCloseDialogue;
     }
     private void Update()
     {
@@ -61,6 +66,9 @@ public class GameController : MonoBehaviour
                 }*/
                 break;
             case GameStates.GamePause:
+                OnStateChange?.Invoke(state, EventArgs.Empty);
+                break;
+            case GameStates.InDialogue:
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
             case GameStates.GameOver:
@@ -101,5 +109,13 @@ public class GameController : MonoBehaviour
             Time.timeScale = 1f;
             OnStateChange?.Invoke(state, EventArgs.Empty);
         }
+    }
+    private void DialogueController_OnCloseDialogue()
+    {
+        throw new NotImplementedException();
+    }
+    private void DialogueController_OnShowDialogue()
+    {
+        throw new NotImplementedException();
     }
 }

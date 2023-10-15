@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         inputController.OnInteract += InputController_OnInteract;
         inputController.OnJump += InputController_OnJump;
+
     }
     private void Update()
     {
