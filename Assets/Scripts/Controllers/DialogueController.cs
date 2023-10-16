@@ -9,49 +9,60 @@ public class DialogueController : MonoBehaviour
 {
     public static DialogueController Instance { get; private set; }
     [SerializeField] private GameObject dialogueBox;
-    [SerializeField] private TMP_Text dialogueText;
-    [SerializeField] private float lettersPerSecond;
+    [SerializeField] private float padding;
+    public Color transparentColor;
+    public Color normalColor;
+    private TMP_Text dialogueText;
+    private float lettersPerSecond;
     private int currentLine = 0;
     private Dialogue dialogue;
     public bool IsTyping { get; private set; }
 
-    public event Action OnShowDialogue;
-    public event Action OnCloseDialogue;
+    public event Action OnDialogue;
 
 
 
     private void Awake()
     {
-        Instance = this;
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
     
 
 
-    public void InitDialogue(GameObject newDialogueBox, TMP_Text newDialogueText, Dialogue newDialogue)
+    public void InitDialogue(GameObject newDialogueBox, TMP_Text newDialogueText, Dialogue newDialogue, float newLettersPerSecond)
     {
         dialogueBox = newDialogueBox;
         dialogueText = newDialogueText;
         currentLine = 0;
+        lettersPerSecond = newLettersPerSecond;
         dialogue = newDialogue;
     }
     public IEnumerator ShowDialogue()
     {
         yield return new WaitForEndOfFrame();
-        //OnShowDialogue?.Invoke();
-        //dialogueBox.SetActive(true);
-        yield return TypeDialogue(dialogue.DialogueLines[0]);
+        OnDialogue?.Invoke();
+        yield return TypeDialogue(dialogue.DialogueLines[currentLine]);
     }
     public IEnumerator TypeDialogue(string lineToType)
     {
         IsTyping = true;
+        SetDialogueBoxSize(lineToType);
         dialogueText.text = "";
-        foreach(var letter in lineToType.ToCharArray())
+        foreach (var letter in lineToType.ToCharArray())
         {
             dialogueText.text += letter;
             yield return new WaitForSeconds(1f / lettersPerSecond);
         }
+        yield return new WaitForSeconds(0.25f);
         IsTyping = false;
-        yield return new WaitForSeconds(1f);
+
     }
     public void TryNextLine()
     {
@@ -62,10 +73,25 @@ public class DialogueController : MonoBehaviour
         }
         else
         {
-            currentLine = 0;
-            dialogueBox.SetActive(false);
-            //OnCloseDialogue?.Invoke();
+            ResetDialogueBox();
+            GameController.Instance.ToggleDialogue();
         }
+    }
+    private void SetDialogueBoxSize(string lineToFit)
+    {
+        dialogueText.text = lineToFit;
+        dialogueText.ForceMeshUpdate();
+
+        Vector2 lineSize = dialogueText.GetRenderedValues(false);
+        Vector2 boxPadding = new(padding, padding);
+
+        dialogueBox.GetComponentInChildren<SpriteRenderer>().size = lineSize + boxPadding;
+    }
+    private void ResetDialogueBox()
+    {
+        currentLine = 0;
+        dialogueText.text = "E";
+        SetDialogueBoxSize("E");
     }
 }
 
@@ -74,6 +100,7 @@ public class DialogueController : MonoBehaviour
 [System.Serializable]
 public class Dialogue
 {
+    [TextArea]
     [SerializeField] private List<string> dialogueLines;
 
     public List<string> DialogueLines => dialogueLines;

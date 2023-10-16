@@ -35,7 +35,8 @@ public class InputController : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+            Instance = this;
+       
 
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();

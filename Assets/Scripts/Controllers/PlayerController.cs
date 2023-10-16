@@ -51,7 +51,10 @@ public class PlayerController : MonoBehaviour
         Vector2 inputDir = inputController.GetMovementNormalized();
 
         FacingDirection(inputDir.x, inputDir.y);
-        Move(inputDir.x, inputDir.y);
+        if(GameController.Instance.IsActiveState(GameStates.GamePlaying))
+        {
+            Move(inputDir.x, inputDir.y);
+        }
 
         //if falling, apply fall multiplier
         if (IsFalling())
@@ -103,24 +106,41 @@ public class PlayerController : MonoBehaviour
     }
     private void InputController_OnInteract(object sender, System.EventArgs e)
     {
-        if(!GameController.Instance.IsActiveState(GameStates.GamePlaying))
+        //if game paused, do not attempt interaction
+        if(GameController.Instance.IsActiveState(GameStates.GamePause))
         {
             return;
         }
-        Vector2 inputDir = inputController.GetMovementNormalized();
-        Vector3 faceDirection = new(inputDir.x, 0f, inputDir.y);
-
-        if (faceDirection != Vector3.zero)
+        //else if in dialogue, wait to see if finished typing
+        else if(GameController.Instance.IsActiveState(GameStates.InDialogue))
         {
-            lastInteractDirection = faceDirection;
-        }
-
-
-        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, interactDistance, interactablesLayer))
-        {
-            if (hit.transform.TryGetComponent(out IInteractable interactable))
+            if(DialogueController.Instance.IsTyping)
             {
-                interactable.Interact(GetComponent<PlayerController>());
+                return;
+            }
+            else
+            {
+                DialogueController.Instance.TryNextLine();
+            }
+        }
+        //else, attempt to interact w an interactable
+        else
+        {
+            Vector2 inputDir = inputController.GetMovementNormalized();
+            Vector3 faceDirection = new(inputDir.x, 0f, inputDir.y);
+
+            if (faceDirection != Vector3.zero)
+            {
+                lastInteractDirection = faceDirection;
+            }
+
+
+            if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, interactDistance, interactablesLayer))
+            {
+                if (hit.transform.TryGetComponent(out IInteractable interactable))
+                {
+                    interactable.Interact(GetComponent<PlayerController>());
+                }
             }
         }
     }

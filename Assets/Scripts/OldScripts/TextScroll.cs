@@ -4,7 +4,17 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-
+/*
+ * 
+ * 
+ * 
+ * 
+ * SCRIPT OBSOLETE
+ * 
+ * 
+ * 
+ * 
+ */
 public class TextScroll : MonoBehaviour
 {
     private List<TextScrollSingle> textScrollSingles;

@@ -13,7 +13,14 @@ public class MusicController : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
         musicSource = GetComponent<AudioSource>();
 
         //get volume from player prefs and set to audio source

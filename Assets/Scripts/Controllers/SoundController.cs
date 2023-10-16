@@ -11,7 +11,14 @@ public class SoundController : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
 
         //grab volume from player prefs
         soundEffectsVolume = PlayerPrefs.GetFloat(PLAYER_PREFS_SFX_VOLUME, 1f);

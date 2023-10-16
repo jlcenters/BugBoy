@@ -27,7 +27,14 @@ public class DialogueBox : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
         //dialogueTxt = GetComponentInChildren<TextMeshPro>();
         dObject = GetComponentInChildren<Text>();
         dialogueBoxBG = GetComponentInChildren<SpriteRenderer>();

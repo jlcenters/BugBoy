@@ -7,13 +7,14 @@ public class Talkable : MonoBehaviour, IInteractable
 {
     [SerializeField] private Dialogue dialogue;
     [SerializeField] private GameObject dialogueBox;
-    [SerializeField] private TMP_Text dialogueText;    
+    [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] private float lettersPerSecond;
 
 
 
     public void Interact(PlayerController player)
     {
-        DialogueController.Instance.InitDialogue(dialogueBox, dialogueText, dialogue);
+        DialogueController.Instance.InitDialogue(dialogueBox, dialogueText, dialogue, lettersPerSecond);
         StartCoroutine(DialogueController.Instance.ShowDialogue());
     }
 

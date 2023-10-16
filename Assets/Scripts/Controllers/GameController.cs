@@ -19,7 +19,6 @@ public enum GameStates
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private DialogueController dialogueController;
     public static GameController Instance { get; private set; }
 
     public event EventHandler OnStateChange;
@@ -29,20 +28,27 @@ public class GameController : MonoBehaviour
     [SerializeField] private float gameTimer = 0f;
     private float gameTime = 0f;
     private bool gamePaused = false;
+    private bool inDialogue = false;
 
 
 
     private void Awake()
     {
         state = GameStates.WaitingToStart;
-        Instance = this;
+
+            Instance = this;
     }
     private void Start()
     {
         InputController.Instance.OnPause += GameInput_OnPause;
 
-        dialogueController.OnShowDialogue += DialogueController_OnShowDialogue;
-        dialogueController.OnCloseDialogue += DialogueController_OnCloseDialogue;
+        DialogueController.Instance.OnDialogue += DialogueController_OnDialogue;
+    }
+    private void OnDestroy()
+    {
+        InputController.Instance.OnPause -= GameInput_OnPause;
+        
+        DialogueController.Instance.OnDialogue -= DialogueController_OnDialogue;
     }
     private void Update()
     {
@@ -110,12 +116,23 @@ public class GameController : MonoBehaviour
             OnStateChange?.Invoke(state, EventArgs.Empty);
         }
     }
-    private void DialogueController_OnCloseDialogue()
+    private void DialogueController_OnDialogue()
     {
-        throw new NotImplementedException();
+        ToggleDialogue();
     }
-    private void DialogueController_OnShowDialogue()
+    public void ToggleDialogue()
     {
-        throw new NotImplementedException();
+        inDialogue = !inDialogue;
+        if(inDialogue)
+        {
+            state = GameStates.InDialogue;
+            gameTime = gameTimer;
+        }
+        else
+        {
+            state = GameStates.GamePlaying;
+            gameTimer = gameTime;
+            OnStateChange?.Invoke(state, EventArgs.Empty);
+        }
     }
 }
