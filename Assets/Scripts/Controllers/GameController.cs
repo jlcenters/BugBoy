@@ -36,7 +36,15 @@ public class GameController : MonoBehaviour
     {
         state = GameStates.WaitingToStart;
 
+        //if instance is taken and it is not self, destroy self; else, instantiate instance as self
+        if(Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
             Instance = this;
+        }
     }
     private void Start()
     {

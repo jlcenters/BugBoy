@@ -3,12 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour
+
+
+[System.Serializable]
+public class PlayerStats
 {
-    [SerializeField] private InputController inputController;
-    public Inventory inventory;
+    //TODO: active hat; active item; 
+    [Header("Combat")]
+    public int HP;
+    [SerializeField] public int MaxHP;
+    [SerializeField] public int attackPower;
 
     [Header("Walking")]
+    [SerializeField] public float rotateSpeed;
+    [SerializeField] public float moveSpeed;
+    [SerializeField] public float playerRadius;
+    [SerializeField] public float playerHeight;
+    [SerializeField] public float moveDistance;
+
+    [Header("Jumping")]
+    [SerializeField] public float jumpForce;
+    [SerializeField] public float jumpMultiplier;
+    [SerializeField] public float fallMultiplier;
+    public ForceMode ForceMode;
+
+    [Header("Interactions")]
+    [SerializeField] public LayerMask interactablesLayer;
+    [SerializeField] public float interactDistance;
+}
+public class PlayerController : MonoBehaviour
+{
+    public static PlayerController Instance {  get; private set; }
+    [SerializeField] private InputController inputController;
+    public Inventory inventory;
+    [SerializeField] private PlayerStats playerStats;
+    public PlayerStats PlayerStats => playerStats;
+
+    public int Hp = 10;
+    /*[Header("Walking")]
     [SerializeField] private float rotateSpeed = 10f;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float playerRadius = 0.7f;
@@ -23,12 +55,11 @@ public class PlayerController : MonoBehaviour
 
     [Header("Interactions")]
     [SerializeField] private LayerMask interactablesLayer;
-    [SerializeField] private float interactDistance = 2f;
+    [SerializeField] private float interactDistance = 2f;*/
 
     private Vector3 lastInteractDirection;
     private Rigidbody rb;
     private bool canMove;
-
 
 
     private void Awake()
@@ -37,6 +68,10 @@ public class PlayerController : MonoBehaviour
         inventory = GetComponent<Inventory>();
         inputController = GetComponent<InputController>();
         rb = GetComponent<Rigidbody>();
+
+        Instance = this;
+        
+        
     }
     private void Start()
     {
@@ -47,7 +82,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         //movement logic
-        moveDistance = moveSpeed * Time.deltaTime;
+        playerStats.moveDistance = playerStats.moveSpeed * Time.deltaTime;
         Vector2 inputDir = inputController.GetMovementNormalized();
 
         FacingDirection(inputDir.x, inputDir.y);
@@ -59,11 +94,11 @@ public class PlayerController : MonoBehaviour
         //if falling, apply fall multiplier
         if (IsFalling())
         {
-            rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            rb.velocity += Vector3.up * Physics.gravity.y * (playerStats.fallMultiplier - 1) * Time.deltaTime;
         }
         else if (!IsFalling())
         {
-            rb.velocity += Vector3.up * Physics.gravity.y * (jumpMultiplier - 1) * Time.deltaTime;
+            rb.velocity += Vector3.up * Physics.gravity.y * (playerStats.jumpMultiplier - 1) * Time.deltaTime;
         }
 
     }
@@ -93,15 +128,15 @@ public class PlayerController : MonoBehaviour
         }
         if (canMove)
         {
-            transform.position += moveDistance * moveDirection;
+            transform.position += playerStats.moveDistance * moveDirection;
         }
-        transform.forward = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
+        transform.forward = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * playerStats.rotateSpeed);
 
     }
     private bool CheckMove(Vector3 direction)
     {
 
-        return !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, direction, moveDistance);
+        return !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerStats.playerHeight, playerStats.playerRadius, direction, playerStats.moveDistance);
 
     }
     private void InputController_OnInteract(object sender, System.EventArgs e)
@@ -135,7 +170,7 @@ public class PlayerController : MonoBehaviour
             }
 
 
-            if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, interactDistance, interactablesLayer))
+            if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, playerStats.interactDistance, playerStats.interactablesLayer))
             {
                 if (hit.transform.TryGetComponent(out IInteractable interactable))
                 {
@@ -146,7 +181,7 @@ public class PlayerController : MonoBehaviour
     }
     private void InputController_OnJump(object sender, System.EventArgs e)
     {
-        rb.AddForce(Vector3.up * jumpForce, ForceMode);
+        rb.AddForce(Vector3.up * playerStats.jumpForce, playerStats.ForceMode);
     }
     private void FacingDirection(float x, float z)
     {
