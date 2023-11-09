@@ -5,42 +5,22 @@ using UnityEngine.EventSystems;
 
 
 
-[System.Serializable]
-public class PlayerStats
-{
-    //TODO: active hat; active item; 
-    [Header("Combat")]
-    public int HP;
-    [SerializeField] public int MaxHP;
-    [SerializeField] public int attackPower;
-
-    [Header("Walking")]
-    [SerializeField] public float rotateSpeed;
-    [SerializeField] public float moveSpeed;
-    [SerializeField] public float playerRadius;
-    [SerializeField] public float playerHeight;
-    [SerializeField] public float moveDistance;
-
-    [Header("Jumping")]
-    [SerializeField] public float jumpForce;
-    [SerializeField] public float jumpMultiplier;
-    [SerializeField] public float fallMultiplier;
-    public ForceMode ForceMode;
-
-    [Header("Interactions")]
-    [SerializeField] public LayerMask interactablesLayer;
-    [SerializeField] public float interactDistance;
-}
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance {  get; private set; }
     [SerializeField] private InputController inputController;
+    [SerializeField] private PlayerUI playerUi;
     public Inventory inventory;
-    [SerializeField] private PlayerStats playerStats;
-    public PlayerStats PlayerStats => playerStats;
 
-    public int Hp = 10;
-    /*[Header("Walking")]
+
+
+    //TODO: active hat; active item; 
+    [Header("Combat")]
+    [SerializeField] private int hp;
+    [SerializeField] private int maxHp;
+    [SerializeField] private int attackPower;
+
+    [Header("Walking")]
     [SerializeField] private float rotateSpeed = 10f;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float playerRadius = 0.7f;
@@ -55,11 +35,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Interactions")]
     [SerializeField] private LayerMask interactablesLayer;
-    [SerializeField] private float interactDistance = 2f;*/
+    [SerializeField] private float interactDistance = 2f;
 
     private Vector3 lastInteractDirection;
     private Rigidbody rb;
     private bool canMove;
+
+    public int Hp => hp;
+    public int MaxHp => maxHp;
+
 
 
     private void Awake()
@@ -68,9 +52,9 @@ public class PlayerController : MonoBehaviour
         inventory = GetComponent<Inventory>();
         inputController = GetComponent<InputController>();
         rb = GetComponent<Rigidbody>();
+        ResetHp();
 
         Instance = this;
-        
         
     }
     private void Start()
@@ -82,7 +66,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         //movement logic
-        playerStats.moveDistance = playerStats.moveSpeed * Time.deltaTime;
+        moveDistance = moveSpeed * Time.deltaTime;
         Vector2 inputDir = inputController.GetMovementNormalized();
 
         FacingDirection(inputDir.x, inputDir.y);
@@ -94,17 +78,18 @@ public class PlayerController : MonoBehaviour
         //if falling, apply fall multiplier
         if (IsFalling())
         {
-            rb.velocity += Vector3.up * Physics.gravity.y * (playerStats.fallMultiplier - 1) * Time.deltaTime;
+            rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
         else if (!IsFalling())
         {
-            rb.velocity += Vector3.up * Physics.gravity.y * (playerStats.jumpMultiplier - 1) * Time.deltaTime;
+            rb.velocity += Vector3.up * Physics.gravity.y * (jumpMultiplier - 1) * Time.deltaTime;
         }
 
     }
 
 
 
+    //Movement Methods
     private void Move(float x, float z)
     {
         Vector3 moveDirection = new(x, 0f, z);
@@ -128,15 +113,15 @@ public class PlayerController : MonoBehaviour
         }
         if (canMove)
         {
-            transform.position += playerStats.moveDistance * moveDirection;
+            transform.position += moveDistance * moveDirection;
         }
-        transform.forward = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * playerStats.rotateSpeed);
+        transform.forward = Vector3.Slerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
 
     }
     private bool CheckMove(Vector3 direction)
     {
 
-        return !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerStats.playerHeight, playerStats.playerRadius, direction, playerStats.moveDistance);
+        return !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, direction, moveDistance);
 
     }
     private void InputController_OnInteract(object sender, System.EventArgs e)
@@ -170,7 +155,7 @@ public class PlayerController : MonoBehaviour
             }
 
 
-            if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, playerStats.interactDistance, playerStats.interactablesLayer))
+            if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, interactDistance, interactablesLayer))
             {
                 if (hit.transform.TryGetComponent(out IInteractable interactable))
                 {
@@ -181,7 +166,7 @@ public class PlayerController : MonoBehaviour
     }
     private void InputController_OnJump(object sender, System.EventArgs e)
     {
-        rb.AddForce(Vector3.up * playerStats.jumpForce, playerStats.ForceMode);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode);
     }
     private void FacingDirection(float x, float z)
     {
@@ -195,5 +180,26 @@ public class PlayerController : MonoBehaviour
     private bool IsFalling()
     {
         return rb.velocity.y <= 0;
+    }
+
+
+
+    //Combat Methods
+    private void ResetHp()
+    {
+        hp = maxHp;
+    }
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+
+        if(hp <= 0)
+        {
+            hp = 0;
+            GameController.Instance.PlayerFainted();
+            Debug.Log("I Dieded");
+        }
+
+        StartCoroutine(playerUi.UpdateHp());
     }
 }

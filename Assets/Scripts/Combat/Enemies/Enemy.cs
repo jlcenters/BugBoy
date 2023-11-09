@@ -14,30 +14,38 @@ public class Enemy : MonoBehaviour
 
     //structs that can change in battle
     public int Hp { get; set; }
-    public int AttackPower {  get; set; }
-    public int BlockPower {  get; set; }
-    public MovementSpeed MovementSpeed { get; set; }
-    public AttackSpeed AttackSpeed { get; set; }
-    private void Update()
+    public int AttackPower {  get; private set; }
+    public int BlockPower {  get; private set; }
+    public MovementSpeed MovementSpeed { get; private set; }
+    public float AttackSpeed { get; private set; }
+
+
+
+    private void Awake()
     {
-        enemyBase.AttackPlayer(PlayerController.Instance);
+        enemyBase = GetComponent<EnemyBase>();
     }
-
-
-    //Constructing and Initializing enemy
-    public Enemy(EnemyBase _base, int multiplier)
+    private void Start()
     {
-        enemyBase = _base;
-        statMultiplier = multiplier;
-        
         Init();
     }
+    
+
+
+
     public void Init()
     {
         Hp = enemyBase.MaxHp;
         AttackPower = enemyBase.AttackPower * statMultiplier;
         BlockPower = enemyBase.BlockPower * statMultiplier;
         MovementSpeed = enemyBase.MovementSpeed;
-        AttackSpeed = enemyBase.AttackSpeed;
+        AttackSpeed = enemyBase.GetAttackSpeed(enemyBase.AttackSpeed);
+    }
+
+
+
+    public void DamagePlayer(PlayerController player)
+    {
+        player.TakeDamage(AttackPower);
     }
 }

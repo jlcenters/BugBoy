@@ -155,6 +155,56 @@ Transform:
   - {fileID: 711685041}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &49907085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 49907086}
+  - component: {fileID: 49907087}
+  m_Layer: 5
+  m_Name: HP
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &49907086
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49907085}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1894461111}
+  m_Father: {fileID: 950815808}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &49907087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49907085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c185d19bc544ecf4ea34c9beb770203c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBar: {fileID: 1894461110}
 --- !u!1 &87267939
 GameObject:
   m_ObjectHideFlags: 0
@@ -3014,7 +3064,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &875122725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8443,6 +8493,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 950815808}
+  - component: {fileID: 950815809}
   m_Layer: 5
   m_Name: Game
   m_TagString: Untagged
@@ -8462,7 +8513,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1894461111}
+  - {fileID: 49907086}
   - {fileID: 130033093}
   - {fileID: 1410489012}
   m_Father: {fileID: 875122728}
@@ -8472,6 +8523,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &950815809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 950815807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d93363236d2e3f4082f66337fdefe22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBar: {fileID: 49907087}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -9131,25 +9195,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputController: {fileID: 1092733819}
+  playerUi: {fileID: 950815809}
   inventory: {fileID: 1092733818}
-  playerStats:
-    HP: 10
-    MaxHP: 0
-    attackPower: 0
-    rotateSpeed: 3
-    moveSpeed: 7
-    playerRadius: 0.7
-    playerHeight: 2
-    moveDistance: 0
-    jumpForce: 600
-    jumpMultiplier: 1
-    fallMultiplier: 3.5
-    ForceMode: 0
-    interactablesLayer:
-      serializedVersion: 2
-      m_Bits: 64
-    interactDistance: 2
-  Hp: 10
+  hp: 0
+  maxHp: 10
+  attackPower: 1
+  rotateSpeed: 3
+  moveSpeed: 7
+  playerRadius: 0.7
+  playerHeight: 2
+  moveDistance: 0
+  jumpForce: 600
+  jumpMultiplier: 1
+  fallMultiplier: 3.5
+  ForceMode: 0
+  interactablesLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  interactDistance: 2
 --- !u!114 &1092733818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10251,7 +10314,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1196244462}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Mosquito
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10287,8 +10350,10 @@ GameObject:
   - component: {fileID: 1209287923}
   - component: {fileID: 1209287928}
   - component: {fileID: 1209287929}
+  - component: {fileID: 1209287931}
+  - component: {fileID: 1209287930}
   m_Layer: 8
-  m_Name: Agent
+  m_Name: MosquitoAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10397,7 +10462,9 @@ MonoBehaviour:
   rotateTime: 3
   walkingSpeed: 3
   runningSpeed: 5
-  stoppingDistance: 4
+  stopDistance: 1
+  pauseChaseDistance: 2.5
+  giveUpChaseDistance: 6
   viewRadius: 10
   viewAngle: 90
   targetLayer:
@@ -10411,6 +10478,41 @@ MonoBehaviour:
   - {fileID: 1907097839}
   - {fileID: 223672716}
   - {fileID: 317926232}
+--- !u!114 &1209287930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209287920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef71491de0a55ba4798faa5bf678bc6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyBase: {fileID: 1209287931}
+  statMultiplier: 1
+--- !u!114 &1209287931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209287920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7b480598f2d5041a11c03ad5b9e74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyName: Mosquito
+  description: Hangs around everywhere; generally weak but powerful probiscus
+  enemyPrefab: {fileID: 0}
+  enemyType: 1
+  maxHp: 5
+  attackPower: 5
+  blockPower: 2
+  movementSpeed: 3
+  attackSpeed: 2
 --- !u!1 &1224317396
 GameObject:
   m_ObjectHideFlags: 0
@@ -11479,7 +11581,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1328133297
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11779,10 +11881,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1914375374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 944.60754, y: -110}
-  m_SizeDelta: {x: 670.78503, y: 220}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1461113718
 MonoBehaviour:
@@ -17759,7 +17861,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1717467209
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18642,7 +18744,7 @@ GameObject:
   - component: {fileID: 1894461113}
   - component: {fileID: 1894461112}
   m_Layer: 5
-  m_Name: HP
+  m_Name: HPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18660,13 +18762,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 950815808}
+  m_Father: {fileID: 49907086}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -340, y: -285}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -690, y: -285}
   m_SizeDelta: {x: 500, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1894461112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19374,10 +19476,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1914375374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 254.60751, y: -110}
-  m_SizeDelta: {x: 509.21503, y: 220}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1968061041
 MonoBehaviour:

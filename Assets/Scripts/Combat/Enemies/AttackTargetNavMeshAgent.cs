@@ -1,6 +1,7 @@
 /*using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;*/
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -51,15 +52,17 @@ public class AttackTargetNavMeshAgent : MonoBehaviour
     private bool targetNear = false;
     private bool isPatroling = true;
     private bool caughtTarget = false;
+    private bool canAttackTarget = true;
 
     //component references
     private NavMeshAgent agent;
-    private Rigidbody rb;
+    private Enemy enemyScript;
 
     /* NOT USED
     [SerializeField] private float meshResolution = 1f;
     [SerializeField] private int edgeIterations = 4;
     [SerializeField] private float edgeDistance = 0.5f;
+        private Rigidbody rb;
     */
 
 
@@ -67,7 +70,7 @@ public class AttackTargetNavMeshAgent : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        rb = GetComponent<Rigidbody>();
+        enemyScript = GetComponent<Enemy>();
     }
     private void Start()
     {
@@ -83,8 +86,16 @@ public class AttackTargetNavMeshAgent : MonoBehaviour
     {
         //TODO: when player caught, attack
         SearchForTarget();
-        
-        if(!isPatroling)
+
+        if (caughtTarget)
+        {
+            if (enemyScript != null && canAttackTarget)
+            {
+                StartCoroutine(Attack());
+            }
+        }
+
+        if (!isPatroling)
         {
             Chase();
         }
@@ -160,11 +171,10 @@ public class AttackTargetNavMeshAgent : MonoBehaviour
             //else if player is 2.5 units from the enemy, stop chasing and begin wait counter
             if (!caughtTarget)
             {
-                Debug.Log("target not yet caught");
+                Debug.Log("chasing");
 
                 if (targetDist < pauseChaseDistance)
                 {
-                    Debug.Log("attackable; caught target");
                     SetTargetCaught(true);
                 }
                 else if (timeToWait <= 0 && targetDist >= giveUpChaseDistance)
@@ -181,7 +191,7 @@ public class AttackTargetNavMeshAgent : MonoBehaviour
             if(targetDist >= pauseChaseDistance)
             {
                 
-                    Debug.Log("wait to chase again");
+                    Debug.Log("attempting to catch again");
                     SetTargetCaught(false);
                     targetNear = true;
                     ToggleMovement(false);
@@ -190,8 +200,13 @@ public class AttackTargetNavMeshAgent : MonoBehaviour
             }
         }
     }
-    private void Attack()
+    private IEnumerator Attack()
     {
+        canAttackTarget = false;
+        Debug.Log("attacking");
+        enemyScript.DamagePlayer(PlayerController.Instance);
+        yield return new WaitForSeconds(enemyScript.AttackSpeed);
+        canAttackTarget = true;
         //when distance between player and enemy == 0; immediate attack
         //toggle movement
         //get physics overlap sphere similar to search for target

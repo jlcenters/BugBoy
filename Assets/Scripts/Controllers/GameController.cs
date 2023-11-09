@@ -86,7 +86,7 @@ public class GameController : MonoBehaviour
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
             case GameStates.GameOver:
-                //gameTime = gameTimer;
+                OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
         }
     }
@@ -142,5 +142,11 @@ public class GameController : MonoBehaviour
             gameTimer = gameTime;
             OnStateChange?.Invoke(state, EventArgs.Empty);
         }
+    }
+    public void PlayerFainted()
+    {
+        Debug.Log("Game Over");
+        state = GameStates.GameOver;
+        Time.timeScale = 0f;
     }
 }

@@ -2,7 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBase : MonoBehaviour
+
+/*
+ * 
+ * 
+ * NOT CURRENTLY USING SCRIPTABLE OBJECT; USING ENEMYBASE INSTEAD
+ * 
+ * 
+ */
+[CreateAssetMenu(fileName = "EnemyBase", menuName = "Enemy/Create New Enemy")]
+public class EnemyBaseOld : ScriptableObject
 {
     [SerializeField] private string enemyName;
     [TextArea]
@@ -31,38 +40,14 @@ public class EnemyBase : MonoBehaviour
 
 
 
-    public float GetAttackSpeed(AttackSpeed speed)
+   /*public void AttackPlayer(PlayerController playerController)
     {
-        float calculatedSpeed = 0f;
-
-        if(attackSpeed == AttackSpeed.verySlow)
-        {
-            calculatedSpeed = 3f;
-        }
-        else if(attackSpeed == AttackSpeed.slow)
-        {
-            calculatedSpeed = 2f;
-        }
-        else if(attackSpeed == AttackSpeed.average)
-        {
-            calculatedSpeed = 1f;
-        }
-        else if(attackSpeed == AttackSpeed.fast)
-        {
-            calculatedSpeed = 0.75f;
-        }
-        else if(attackSpeed == AttackSpeed.veryFast)
-        {
-            calculatedSpeed = 0.5f;
-        }
-
-
-        return calculatedSpeed;
-    }
+        playerController.hp -= 1;
+    }*/
 }
 
 
-
+/*
 public enum AttackSpeed
 {
     verySlow, slow, average, fast, veryFast
@@ -81,3 +66,4 @@ public enum EnemyType
 {
     worm, mosquito, spider, spiderBaby
 }
+*/
