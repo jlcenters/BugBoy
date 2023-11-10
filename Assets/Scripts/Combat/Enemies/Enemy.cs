@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 [System.Serializable]
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IAttackable
 {
     [SerializeField] private EnemyBase enemyBase;
     [SerializeField] int statMultiplier;
@@ -32,7 +32,6 @@ public class Enemy : MonoBehaviour
     
 
 
-
     public void Init()
     {
         Hp = enemyBase.MaxHp;
@@ -44,8 +43,18 @@ public class Enemy : MonoBehaviour
 
 
 
+    //IAttackable Methods
     public void DamagePlayer(PlayerController player)
     {
         player.TakeDamage(AttackPower);
+    }
+    public void ReceiveDamage(int damage)
+    {
+        Hp -= damage;
+        if(Hp <= 0)
+        {
+            Debug.Log("dead");
+            Destroy(gameObject);
+        }
     }
 }

@@ -9197,9 +9197,13 @@ MonoBehaviour:
   inputController: {fileID: 1092733819}
   playerUi: {fileID: 950815809}
   inventory: {fileID: 1092733818}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
   hp: 0
-  maxHp: 10
+  maxHp: 100
   attackPower: 1
+  attackSpeed: 0.5
   rotateSpeed: 3
   moveSpeed: 7
   playerRadius: 0.7

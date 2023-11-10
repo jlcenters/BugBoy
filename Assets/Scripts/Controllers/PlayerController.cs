@@ -16,9 +16,12 @@ public class PlayerController : MonoBehaviour
 
     //TODO: active hat; active item; 
     [Header("Combat")]
+    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int hp;
     [SerializeField] private int maxHp;
     [SerializeField] private int attackPower;
+    [SerializeField] private float attackSpeed;
+    private bool canAttack = true;
 
     [Header("Walking")]
     [SerializeField] private float rotateSpeed = 10f;
@@ -26,20 +29,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float playerRadius = 0.7f;
     [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float moveDistance;
+    private bool canMove;
 
     [Header("Jumping")]
     [SerializeField] private float jumpForce = 1f;
     [SerializeField] private float jumpMultiplier = 1f;
     [SerializeField] private float fallMultiplier = 1f;
     public ForceMode ForceMode;
+    //can jump bool
 
     [Header("Interactions")]
     [SerializeField] private LayerMask interactablesLayer;
     [SerializeField] private float interactDistance = 2f;
-
     private Vector3 lastInteractDirection;
+
     private Rigidbody rb;
-    private bool canMove;
 
     public int Hp => hp;
     public int MaxHp => maxHp;
@@ -61,6 +65,7 @@ public class PlayerController : MonoBehaviour
     {
         inputController.OnInteract += InputController_OnInteract;
         inputController.OnJump += InputController_OnJump;
+        inputController.OnAttack += InputController_OnAttack;
 
     }
     private void Update()
@@ -146,18 +151,10 @@ public class PlayerController : MonoBehaviour
         //else, attempt to interact w an interactable
         else
         {
-            Vector2 inputDir = inputController.GetMovementNormalized();
-            Vector3 faceDirection = new(inputDir.x, 0f, inputDir.y);
-
-            if (faceDirection != Vector3.zero)
+            
+            if (IsInLayerVicinity(interactablesLayer))
             {
-                lastInteractDirection = faceDirection;
-            }
-
-
-            if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, interactDistance, interactablesLayer))
-            {
-                if (hit.transform.TryGetComponent(out IInteractable interactable))
+                if (CheckLayerDistance(interactablesLayer).transform.TryGetComponent(out IInteractable interactable))
                 {
                     interactable.Interact(GetComponent<PlayerController>());
                 }
@@ -167,6 +164,55 @@ public class PlayerController : MonoBehaviour
     private void InputController_OnJump(object sender, System.EventArgs e)
     {
         rb.AddForce(Vector3.up * jumpForce, ForceMode);
+    }
+    private void InputController_OnAttack(object sender, System.EventArgs e)
+    {
+        Debug.Log("attack input selected");
+        //if not in distance of an enemy, return
+        if (!IsInLayerVicinity(enemyLayer))
+        {
+            return;
+        }
+        //if paused, return
+        else if (GameController.Instance.IsActiveState(GameStates.GamePause))
+        {
+            return;
+        }
+        //if in dialogue, return
+        else if (GameController.Instance.IsActiveState(GameStates.InDialogue))
+        {
+            return;
+        }
+        //if already attacking/attack timer hasn't reset yet, return
+        if (!canAttack)
+        {
+            return;
+        }
+        else
+        {
+            StartCoroutine(Attack() );
+        }
+    }
+    private bool IsInLayerVicinity(LayerMask layer)
+    {
+        Vector2 inputDir = inputController.GetMovementNormalized();
+        Vector3 faceDirection = new(inputDir.x, 0f, inputDir.y);
+
+        if (faceDirection != Vector3.zero)
+        {
+            lastInteractDirection = faceDirection;
+        }
+
+        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, interactDistance, layer))
+        {
+            return true;
+        }
+        return false;
+    }
+    private RaycastHit CheckLayerDistance(LayerMask layer)
+    {
+        Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hit, interactDistance, layer);
+        return hit;
     }
     private void FacingDirection(float x, float z)
     {
@@ -201,5 +247,19 @@ public class PlayerController : MonoBehaviour
         }
 
         StartCoroutine(playerUi.UpdateHp());
+    }
+    public IEnumerator Attack()
+    {
+        canAttack = false;
+        Debug.Log("attacking enemy");
+        if (CheckLayerDistance(enemyLayer).transform.TryGetComponent(out IAttackable attackable))
+        {
+            attackable.ReceiveDamage(attackPower);
+        }
+
+        Debug.Log("waiting to attack again");
+        yield return new WaitForSeconds(attackSpeed);
+        Debug.Log("can attack again");
+        canAttack = true;
     }
 }

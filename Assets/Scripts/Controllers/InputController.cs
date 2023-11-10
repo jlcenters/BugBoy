@@ -30,7 +30,7 @@ public class InputController : MonoBehaviour
     public event EventHandler OnInteract;
     public event EventHandler OnJump;
     public event EventHandler OnPause;
-
+    public event EventHandler OnAttack;
 
 
     private void Awake()
@@ -51,7 +51,11 @@ public class InputController : MonoBehaviour
         playerInputActions.Player.Interact.performed += Interact_performed;
         playerInputActions.Player.Jump.performed += Jump_performed;
         playerInputActions.Player.Pause.performed += Pause_performed;
+        playerInputActions.Player.Attack.performed += Attack_performed;
     }
+
+
+
     private void OnDestroy()
     {
         //unsubscribe
@@ -82,6 +86,10 @@ public class InputController : MonoBehaviour
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         OnPause?.Invoke(this, EventArgs.Empty);
+    }
+    private void Attack_performed(InputAction.CallbackContext obj)
+    {
+        OnAttack?.Invoke(this, EventArgs.Empty);
     }
     public string GetBindingText(InputBindings binding)
     {
