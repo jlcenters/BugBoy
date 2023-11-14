@@ -17,7 +17,7 @@ public class Collectable : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController player)
     {
-        player.inventory.UpdateCollectable(type, value);
+        player.inventory.AddCollectable(type, value);
         Destroy(gameObject);
     }
 }

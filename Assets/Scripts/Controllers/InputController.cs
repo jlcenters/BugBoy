@@ -31,7 +31,7 @@ public class InputController : MonoBehaviour
     public event EventHandler OnJump;
     public event EventHandler OnPause;
     public event EventHandler OnAttack;
-
+    public event EventHandler OnUseItem;
 
     private void Awake()
     {
@@ -52,16 +52,16 @@ public class InputController : MonoBehaviour
         playerInputActions.Player.Jump.performed += Jump_performed;
         playerInputActions.Player.Pause.performed += Pause_performed;
         playerInputActions.Player.Attack.performed += Attack_performed;
+        playerInputActions.Player.UseItem.performed += UseItem_performed;
     }
-
-
-
     private void OnDestroy()
     {
         //unsubscribe
         playerInputActions.Player.Interact.performed -= Interact_performed;
         playerInputActions.Player.Jump.performed -= Jump_performed;
         playerInputActions.Player.Pause.performed -= Pause_performed;
+        playerInputActions.Player.Attack.performed -= Attack_performed;
+        playerInputActions.Player.UseItem.performed -= UseItem_performed;
 
         playerInputActions.Dispose();
     }
@@ -91,6 +91,13 @@ public class InputController : MonoBehaviour
     {
         OnAttack?.Invoke(this, EventArgs.Empty);
     }
+    private void UseItem_performed(InputAction.CallbackContext obj)
+    {
+        OnUseItem?.Invoke(this, EventArgs.Empty);
+    }
+
+
+
     public string GetBindingText(InputBindings binding)
     {
         switch (binding)

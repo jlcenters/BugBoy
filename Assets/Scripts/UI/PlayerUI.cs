@@ -8,7 +8,8 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     [SerializeField] private HpBarUI hpBar;
-    //TODO: held hat and item
+    [SerializeField] private ItemBarUI itemBar;
+    //TODO: held hat
 
 
 
@@ -23,14 +24,26 @@ public class PlayerUI : MonoBehaviour
     {
         SetHp();
         //reset hat option
-        //reset item option
+        SetItem();
     }
-    private void SetHp()
+    public void SetHp()
     {
         hpBar.SetHp((float)PlayerController.Instance.Hp / PlayerController.Instance.MaxHp);
     }
+    public void SetItem()
+    {
+        itemBar.SetItem((float)PlayerController.Instance.inventory.Honey);
+    }
+
+
+
     public IEnumerator UpdateHp()
     {
         yield return hpBar.SlideHp((float)PlayerController.Instance.Hp / PlayerController.Instance.MaxHp);
     }
+    /*public IEnumerator UpdateItem()
+    {
+        yield return itemBar.SlideItemBar((float)PlayerController.Instance.inventory.Honey);
+    }*/
+
 }

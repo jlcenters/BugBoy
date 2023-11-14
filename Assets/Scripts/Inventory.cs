@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,55 +22,102 @@ public class Inventory : MonoBehaviour
     [SerializeField] private int badges;
     [SerializeField] private int sprinkles;
 
-    public Dictionary<CollectableType, int> collectables = new();
-    public List<Usable> tools = new();
-    public List<Hat> hats = new();
+    [Header("Hats")]
+    [SerializeField] private bool antHat = false;
+    [SerializeField] private bool beeHat = false;
+    [SerializeField] private bool beetleHat = false;
+    [SerializeField] private bool mosquitoHat = false;
 
-    public int Flies { get { return flies; } set { flies = value; } }
+    //ant = speed, bee = attack, beetle = defense
+    [Header("Hat Buffs")]
+    public HatType activeHat = HatType.None;
+    public readonly int ANT_BUFF = 5;
+    public readonly int BEE_BUFF;
+    public readonly int BEETLE_BUFF;
+
+    public Dictionary<CollectableType, int> collectables = new();
+    public Dictionary<ItemType, int> tools = new();
+    public Dictionary<HatType, bool> hats = new();
+    //TODO: active tool
+
+    /*public int Flies { get { return flies; } set { flies = value; } }
     public int Tokens { get { return tokens; } set { tokens = value; } }
     public int Badges { get { return badges; } set { badges = value; } }
     public int Sprinkles { get { return sprinkles; } set { sprinkles = value; } }
-
-
+    */
+    public int Honey { get { return honey; } set { honey = value; } }
 
     private void Awake()
     {
-        collectables.Add(CollectableType.Flies, Flies);
-        collectables.Add(CollectableType.Tokens, Tokens);
-        collectables.Add(CollectableType.Badges, Badges);
-        collectables.Add(CollectableType.Sprinkles, Sprinkles);
+        collectables.Add(CollectableType.Flies, flies);
+        collectables.Add(CollectableType.Tokens, tokens);
+        collectables.Add(CollectableType.Badges, badges);
+        collectables.Add(CollectableType.Sprinkles, sprinkles);
+
+        tools.Add(ItemType.Honey, honey);
+        tools.Add(ItemType.Ants, ants);
+        tools.Add(ItemType.Mud, mud);
+
+        hats.Add(HatType.None, true);
+        hats.Add(HatType.Ant, antHat);
+        hats.Add(HatType.Bee, beeHat);
+        hats.Add (HatType.Beetle, beetleHat);
+        hats.Add(HatType.Mosquito, mosquitoHat);
     }
 
 
 
-    public void UpdateCollectable(CollectableType key, int value)
+    public void AddCollectable(CollectableType key, int value)
     {
         collectables[key] += value;
         UpdateCollectableInventory();
     }
-
-    public void UseTool(ItemType itemType)
+    public void AddTool(ItemType key, int value)
     {
-        //buff/debuff
+        tools[key] += value;
+        UpdateToolInventory();
+    }
+    public void AddHat(HatType key)
+    {
+        hats[key] = true;
+        UpdateHatInventory();
+        activeHat = key;
+    }
 
-        //consume tool
-        for (int i = 0; i < tools.Count; i++)
+
+
+    public bool ConsumeTool(ItemType itemType, int amountUsed)
+    {
+        if (tools[itemType] - amountUsed < 0)
         {
-            if(tools[i].type == itemType)
-            {
-                tools.Remove(tools[i]);
-                break;  
-            }
+            return false;
         }
+
+        tools[itemType] -= amountUsed;
+        UpdateToolInventory();
+        return true;
     }
 
 
 
     private void UpdateCollectableInventory()
     {
-        Flies = collectables[CollectableType.Flies];
-        Tokens = collectables[CollectableType.Tokens];
-        Badges = collectables[CollectableType.Badges];
-        Sprinkles = collectables[CollectableType.Sprinkles];
+        flies = collectables[CollectableType.Flies];
+        tokens = collectables[CollectableType.Tokens];
+        badges = collectables[CollectableType.Badges];
+        sprinkles = collectables[CollectableType.Sprinkles];
+    }
+    private void UpdateToolInventory()
+    {
+        honey = tools[ItemType.Honey];
+        ants = tools[ItemType.Ants];
+        mud = tools[ItemType.Mud];
+    }
+    private void UpdateHatInventory()
+    {
+        antHat = hats[HatType.Ant];
+        beeHat = hats[HatType.Bee];
+        beetleHat = hats[HatType.Beetle];
+        mosquitoHat = hats[HatType.Mosquito];
     }
 }

@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance {  get; private set; }
     [SerializeField] private InputController inputController;
-    [SerializeField] private PlayerUI playerUi;
+    public PlayerUI playerUi;
     public Inventory inventory;
 
 
@@ -66,12 +66,19 @@ public class PlayerController : MonoBehaviour
         inputController.OnInteract += InputController_OnInteract;
         inputController.OnJump += InputController_OnJump;
         inputController.OnAttack += InputController_OnAttack;
-
+        inputController.OnUseItem += InputController_OnUseItem;
     }
     private void Update()
     {
         //movement logic
-        moveDistance = moveSpeed * Time.deltaTime;
+        if(inventory.activeHat == HatType.Ant)
+        {
+            moveDistance = (moveSpeed + inventory.ANT_BUFF) * Time.deltaTime;
+        }
+        else
+        {
+            moveDistance = moveSpeed * Time.deltaTime;
+        }
         Vector2 inputDir = inputController.GetMovementNormalized();
 
         FacingDirection(inputDir.x, inputDir.y);
@@ -191,6 +198,30 @@ public class PlayerController : MonoBehaviour
         else
         {
             StartCoroutine(Attack() );
+        }
+    }
+    private void InputController_OnUseItem(object sender, System.EventArgs e)
+    {
+        //TODO: implement mmb to choose item to use before using
+
+        //currently only using and receiving honey
+        //check if inventory use item method will return true
+        bool consumedItem = inventory.ConsumeTool(ItemType.Honey, 1);
+        if (consumedItem)
+        {
+            //if so, it was successfully consumed
+            Debug.Log("could use item");
+            //update new item ui
+            playerUi.SetItem();
+            //heal player up to max amt
+            ResetHp();
+            //update hp ui
+            playerUi.SetHp();
+        }
+        else
+        {
+            //otherwise, do nothing         
+            Debug.Log("could not use item");
         }
     }
     private bool IsInLayerVicinity(LayerMask layer)
