@@ -12,7 +12,8 @@ public enum GameStates
     GamePlaying,
     GamePause,
     GameOver,
-    InDialogue
+    InDialogue,
+    InHatWheel
 }
 
 
@@ -29,7 +30,7 @@ public class GameController : MonoBehaviour
     private float gameTime = 0f;
     private bool gamePaused = false;
     private bool inDialogue = false;
-
+    private bool hatWheel = false;
 
 
     private void Awake()
@@ -48,15 +49,15 @@ public class GameController : MonoBehaviour
     }
     private void Start()
     {
-        InputController.Instance.OnPause += GameInput_OnPause;
-
+        InputController.Instance.OnPause += InputController_OnPause;
         DialogueController.Instance.OnDialogue += DialogueController_OnDialogue;
+        InputController.Instance.OnToggleHatWheel += InputController_OnToggleHatWheel;
     }
     private void OnDestroy()
     {
-        InputController.Instance.OnPause -= GameInput_OnPause;
-        
+        InputController.Instance.OnPause -= InputController_OnPause;
         DialogueController.Instance.OnDialogue -= DialogueController_OnDialogue;
+        InputController.Instance.OnToggleHatWheel -= InputController_OnToggleHatWheel;
     }
     private void Update()
     {
@@ -85,6 +86,9 @@ public class GameController : MonoBehaviour
             case GameStates.InDialogue:
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
+            case GameStates.InHatWheel:
+                OnStateChange?.Invoke(state, EventArgs.Empty);
+                break;
             case GameStates.GameOver:
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
@@ -105,7 +109,7 @@ public class GameController : MonoBehaviour
     {
         return gameTime;
     }
-    private void GameInput_OnPause(object sender, EventArgs e)
+    private void InputController_OnPause(object sender, EventArgs e)
     {
         TogglePauseMenu();
     }
@@ -148,5 +152,20 @@ public class GameController : MonoBehaviour
         Debug.Log("Game Over");
         state = GameStates.GameOver;
         Time.timeScale = 0f;
+    }
+    private void InputController_OnToggleHatWheel(object sender, EventArgs e)
+    {
+        hatWheel = !hatWheel;
+        if (hatWheel)
+        {
+            state = GameStates.InHatWheel;
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            state = GameStates.GamePlaying;
+            Time.timeScale = 1f;
+            OnStateChange?.Invoke(state, EventArgs.Empty);
+        }
     }
 }

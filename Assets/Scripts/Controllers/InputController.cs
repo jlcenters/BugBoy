@@ -32,7 +32,7 @@ public class InputController : MonoBehaviour
     public event EventHandler OnPause;
     public event EventHandler OnAttack;
     public event EventHandler OnUseItem;
-
+    public event EventHandler OnToggleHatWheel;
     private void Awake()
     {
             Instance = this;
@@ -53,6 +53,7 @@ public class InputController : MonoBehaviour
         playerInputActions.Player.Pause.performed += Pause_performed;
         playerInputActions.Player.Attack.performed += Attack_performed;
         playerInputActions.Player.UseItem.performed += UseItem_performed;
+        playerInputActions.Player.ToggleHatWheel.performed += ToggleHatWheel_performed;
     }
     private void OnDestroy()
     {
@@ -62,6 +63,7 @@ public class InputController : MonoBehaviour
         playerInputActions.Player.Pause.performed -= Pause_performed;
         playerInputActions.Player.Attack.performed -= Attack_performed;
         playerInputActions.Player.UseItem.performed -= UseItem_performed;
+        playerInputActions.Player.ToggleHatWheel.performed -= ToggleHatWheel_performed;
 
         playerInputActions.Dispose();
     }
@@ -75,15 +77,15 @@ public class InputController : MonoBehaviour
         //they will both increase with a magnitude of 1
         return inputDir.normalized;
     }
-    private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void Interact_performed(InputAction.CallbackContext obj)
     {
         OnInteract?.Invoke(this, EventArgs.Empty);
     }
-    public void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    public void Jump_performed(InputAction.CallbackContext obj)
     {
         OnJump?.Invoke(this, EventArgs.Empty);
     }
-    private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void Pause_performed(InputAction.CallbackContext obj)
     {
         OnPause?.Invoke(this, EventArgs.Empty);
     }
@@ -94,6 +96,10 @@ public class InputController : MonoBehaviour
     private void UseItem_performed(InputAction.CallbackContext obj)
     {
         OnUseItem?.Invoke(this, EventArgs.Empty);
+    }
+    private void ToggleHatWheel_performed(InputAction.CallbackContext obj)
+    {
+        OnToggleHatWheel?.Invoke(this, EventArgs.Empty);
     }
 
 
