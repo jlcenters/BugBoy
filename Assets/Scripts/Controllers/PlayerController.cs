@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance {  get; private set; }
     [SerializeField] private InputController inputController;
     public PlayerUI playerUi;
+    public HatWheelUI hatWheelUI;
     public Inventory inventory;
 
 
@@ -70,33 +71,35 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        //movement logic
-        if(inventory.activeHat == HatType.Ant)
-        {
-            moveDistance = (moveSpeed + inventory.ANT_BUFF) * Time.deltaTime;
-        }
-        else
-        {
-            moveDistance = moveSpeed * Time.deltaTime;
-        }
-        Vector2 inputDir = inputController.GetMovementNormalized();
-
-        FacingDirection(inputDir.x, inputDir.y);
         if(GameController.Instance.IsActiveState(GameStates.GamePlaying))
         {
-            Move(inputDir.x, inputDir.y);
-        }
+            //movement logic
+            if (inventory.activeHat == HatType.Ant)
+            {
+                moveDistance = (moveSpeed + inventory.ANT_BUFF) * Time.deltaTime;
+            }
+            else
+            {
+                moveDistance = moveSpeed * Time.deltaTime;
+            }
+            Vector2 inputDir = inputController.GetMovementNormalized();
 
-        //if falling, apply fall multiplier
-        if (IsFalling())
-        {
-            rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        }
-        else if (!IsFalling())
-        {
-            rb.velocity += Vector3.up * Physics.gravity.y * (jumpMultiplier - 1) * Time.deltaTime;
-        }
+            FacingDirection(inputDir.x, inputDir.y);
+            if (GameController.Instance.IsActiveState(GameStates.GamePlaying))
+            {
+                Move(inputDir.x, inputDir.y);
+            }
 
+            //if falling, apply fall multiplier
+            if (IsFalling())
+            {
+                rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            }
+            else if (!IsFalling())
+            {
+                rb.velocity += Vector3.up * Physics.gravity.y * (jumpMultiplier - 1) * Time.deltaTime;
+            }
+        }
     }
 
 
@@ -132,14 +135,12 @@ public class PlayerController : MonoBehaviour
     }
     private bool CheckMove(Vector3 direction)
     {
-
         return !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, direction, moveDistance);
-
     }
     private void InputController_OnInteract(object sender, System.EventArgs e)
     {
         //if game paused, do not attempt interaction
-        if(GameController.Instance.IsActiveState(GameStates.GamePause))
+        if(GameController.Instance.IsActiveState(GameStates.GamePause) || GameController.Instance.IsActiveState(GameStates.InHatWheel))
         {
             return;
         }
@@ -170,58 +171,67 @@ public class PlayerController : MonoBehaviour
     }
     private void InputController_OnJump(object sender, System.EventArgs e)
     {
-        rb.AddForce(Vector3.up * jumpForce, ForceMode);
+        if (GameController.Instance.IsActiveState(GameStates.GamePlaying))
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode);
+        }
     }
     private void InputController_OnAttack(object sender, System.EventArgs e)
     {
-        Debug.Log("attack input selected");
-        //if not in distance of an enemy, return
-        if (!IsInLayerVicinity(enemyLayer))
+        if (GameController.Instance.IsActiveState(GameStates.GamePlaying))
         {
-            return;
-        }
-        //if paused, return
-        else if (GameController.Instance.IsActiveState(GameStates.GamePause))
-        {
-            return;
-        }
-        //if in dialogue, return
-        else if (GameController.Instance.IsActiveState(GameStates.InDialogue))
-        {
-            return;
-        }
-        //if already attacking/attack timer hasn't reset yet, return
-        if (!canAttack)
-        {
-            return;
-        }
-        else
-        {
-            StartCoroutine(Attack() );
+            Debug.Log("attack input selected");
+            //if not in distance of an enemy, return
+            if (!IsInLayerVicinity(enemyLayer))
+            {
+                return;
+            }
+            //if paused, return
+            /*else if (GameController.Instance.IsActiveState(GameStates.GamePause) || )
+            {
+                return;
+            }
+            //if in dialogue, return
+            else if (GameController.Instance.IsActiveState(GameStates.InDialogue))
+            {
+                return;
+            }*/
+            //if already attacking/attack timer hasn't reset yet, return
+            if (!canAttack)
+            {
+                return;
+            }
+            else
+            {
+                StartCoroutine(Attack());
+            }
         }
     }
     private void InputController_OnUseItem(object sender, System.EventArgs e)
     {
-        //TODO: implement mmb to choose item to use before using
+        if (GameController.Instance.IsActiveState(GameStates.GamePlaying))
+        {
+            //TODO: implement mmb to choose item to use before using
 
-        //currently only using and receiving honey
-        //check if inventory use item method will return true
-        bool consumedItem = inventory.ConsumeTool(ItemType.Honey, 1);
-        if (consumedItem)
-        {
-            //if so, it was successfully consumed
-            Debug.Log("could use item");
-            //update new item ui
-            playerUi.SetItem();
-            //heal player up to max amt
-            ResetHp();
-            //update hp ui
-            playerUi.SetHp();
-        }
-        else
-        {
-            //otherwise, do nothing         
-            Debug.Log("could not use item");
+            //currently only using and receiving honey
+            //check if inventory use item method will return true
+            bool consumedItem = inventory.ConsumeTool(ItemType.Honey, 1);
+            if (consumedItem)
+            {
+                //if so, it was successfully consumed
+                Debug.Log("could use item");
+                //update new item ui
+                playerUi.SetItem();
+                //heal player up to max amt
+                ResetHp();
+                //update hp ui
+                playerUi.SetHp();
+            }
+            else
+            {
+                //otherwise, do nothing         
+                Debug.Log("could not use item");
+            }
         }
     }
     private bool IsInLayerVicinity(LayerMask layer)

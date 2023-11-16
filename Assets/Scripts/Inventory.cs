@@ -81,7 +81,7 @@ public class Inventory : MonoBehaviour
     {
         hats[key] = true;
         UpdateHatInventory();
-        activeHat = key;
+        SetActiveHat(key);
     }
 
 
@@ -96,6 +96,10 @@ public class Inventory : MonoBehaviour
         tools[itemType] -= amountUsed;
         UpdateToolInventory();
         return true;
+    }
+    public void SetActiveHat(HatType hatType)
+    {
+        activeHat = hatType;
     }
 
 

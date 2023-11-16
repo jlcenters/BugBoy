@@ -7,18 +7,12 @@ using UnityEngine.UI;
 public class HatWheelUI : MonoBehaviour
 {
     private List<HatType> playerHats = new();
-    [SerializeField] private Button[] buttons = new Button[4];
-    [SerializeField] private TextMeshProUGUI hat0Text;
+    //[SerializeField] private Button[] buttons = new Button[4];
+    [SerializeField] private HatButtonUI[] btns = new HatButtonUI[4];
+    /*[SerializeField] private TextMeshProUGUI hat0Text;
     [SerializeField] private TextMeshProUGUI hat1Text;
     [SerializeField] private TextMeshProUGUI hat2Text;
-    [SerializeField] private TextMeshProUGUI hat3Text;
-
-
-
-    private void Start()
-    {
-        SetUpWheel();
-    }
+    [SerializeField] private TextMeshProUGUI hat3Text;*/
 
 
 
@@ -46,25 +40,22 @@ public class HatWheelUI : MonoBehaviour
     }
     private void SetDisplay()
     {
-        buttons[0].GetComponentInChildren<TMP_Text>().text = playerHats[0].ToString();
-        for(int i = 0; i < buttons.Length; i++)
+        btns[0].SetUpButton(playerHats[0], "No Hat");
+        for(int i = 1; i < btns.Length; i++)
         {
             if (playerHats.Count > i)
             {
-                buttons[i].GetComponentInChildren<TMP_Text>().text = "hello " + playerHats[i].ToString();
+                btns[i].SetUpButton(playerHats[i], playerHats[i].ToString() + "Hat");
             }
             else
             {
-                buttons[i].GetComponentInChildren<TMP_Text>().text = "-Empty-";
+                btns[i].SetButtonText("-Empty-");
             }
         }
-        //hat0Button.GetComponentInChildren<TMP_Text>().text = "hello";
-
     }
     public void SetUpWheel()
     {
         GetHats();
         SetDisplay();
     }
-
 }

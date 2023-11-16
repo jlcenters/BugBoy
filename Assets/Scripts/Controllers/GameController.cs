@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour
     private bool hatWheel = false;
 
 
+
     private void Awake()
     {
         state = GameStates.WaitingToStart;
@@ -160,6 +161,7 @@ public class GameController : MonoBehaviour
         {
             state = GameStates.InHatWheel;
             Time.timeScale = 0f;
+            PlayerController.Instance.hatWheelUI.SetUpWheel();
         }
         else
         {

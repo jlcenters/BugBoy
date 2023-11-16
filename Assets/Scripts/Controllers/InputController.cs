@@ -70,6 +70,12 @@ public class InputController : MonoBehaviour
 
 
 
+    public Vector3 UpdateCameraPosition()
+    {
+        Vector3 mousePos = Mouse.current.position.ReadValue();
+        mousePos.z = Camera.main.nearClipPlane;
+        return Camera.main.ScreenToWorldPoint(mousePos);
+    }
     public Vector2 GetMovementNormalized()
     {
         Vector2 inputDir = playerInputActions.Player.Move.ReadValue<Vector2>();
