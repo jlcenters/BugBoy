@@ -9303,6 +9303,15 @@ MonoBehaviour:
   target: {fileID: 1092733816}
   offset: 5
   followType: 0
+  targetGameObject: {fileID: 1092733812}
+  cam: {fileID: 0}
+  yAngleMin: 20
+  yAngleMax: 60
+  distance: 10
+  sensitivityX: 4
+  sensitivityY: -3
+  currentX: 0
+  currentY: 0
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
