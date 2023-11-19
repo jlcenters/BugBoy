@@ -16,6 +16,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private int ants;
     [SerializeField] private int mud;
     [SerializeField] private int honey;
+    public readonly int MAX_TOOLS = 5;
 
     [Header("Collectables")]
     [SerializeField] private int tokens;
@@ -74,7 +75,14 @@ public class Inventory : MonoBehaviour
     }
     public void AddTool(ItemType key, int value)
     {
-        tools[key] += value;
+        if (tools[key] + value > MAX_TOOLS)
+        {
+            tools[key] = MAX_TOOLS;
+        }
+        else
+        {
+            tools[key] += value;
+        }
         UpdateToolInventory();
     }
     public void AddHat(HatType key)

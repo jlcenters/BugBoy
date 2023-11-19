@@ -139,13 +139,13 @@ public class PlayerController : MonoBehaviour
     }
     private void InputController_OnInteract(object sender, System.EventArgs e)
     {
-        //if game paused, do not attempt interaction
+        /*//if game paused, do not attempt interaction
         if(GameController.Instance.IsActiveState(GameStates.GamePause) || GameController.Instance.IsActiveState(GameStates.InHatWheel))
         {
             return;
-        }
-        //else if in dialogue, wait to see if finished typing
-        else if(GameController.Instance.IsActiveState(GameStates.InDialogue))
+        }*/
+        //if in dialogue, wait to see if finished typing
+        if(GameController.Instance.IsActiveState(GameStates.InDialogue))
         {
             if(DialogueController.Instance.IsTyping)
             {
@@ -156,14 +156,19 @@ public class PlayerController : MonoBehaviour
                 DialogueController.Instance.TryNextLine();
             }
         }
-        //else, attempt to interact w an interactable
-        else
+        //else if game state is game playing, attempt to interact w an interactable
+        else if(GameController.Instance.IsActiveState(GameStates.GamePlaying))
         {
             
             if (IsInLayerVicinity(interactablesLayer))
             {
+                /*if (CheckLayerDistance(interactablesLayer).transform.TryGetComponent(out DigSpot digSpot))
+                {
+                    digSpot.Interact(GetComponent<PlayerController>());
+                }*/
                 if (CheckLayerDistance(interactablesLayer).transform.TryGetComponent(out IInteractable interactable))
                 {
+                    Debug.Log("found interactable");
                     interactable.Interact(GetComponent<PlayerController>());
                 }
             }

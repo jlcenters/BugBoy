@@ -8,7 +8,6 @@ using UnityEngine;
 public class Tool : MonoBehaviour, IInteractable
 {
     [SerializeField] private int value = 1;
-    private const int MAX_VALUE = 5;
     public ItemType type;
 
 
@@ -19,7 +18,7 @@ public class Tool : MonoBehaviour, IInteractable
         for(int i = value; i > 0; i--)
         {
             //if the current value added to inventory is at most 10, add i objects to inventory and return
-            if (player.inventory.Honey + i <= MAX_VALUE)
+            if (player.inventory.Honey + i <= player.inventory.MAX_TOOLS)
             {
                 player.inventory.AddTool(type, i);
                 player.playerUi.SetItem();

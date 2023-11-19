@@ -13,7 +13,8 @@ public enum GameStates
     GamePause,
     GameOver,
     InDialogue,
-    InHatWheel
+    InHatWheel,
+    Digging,
 }
 
 
@@ -31,6 +32,7 @@ public class GameController : MonoBehaviour
     private bool gamePaused = false;
     private bool inDialogue = false;
     private bool hatWheel = false;
+    private bool digging = false;
 
 
 
@@ -88,6 +90,9 @@ public class GameController : MonoBehaviour
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
             case GameStates.InHatWheel:
+                OnStateChange?.Invoke(state, EventArgs.Empty);
+                break;
+            case GameStates.Digging:
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
             case GameStates.GameOver:
@@ -167,6 +172,21 @@ public class GameController : MonoBehaviour
         {
             state = GameStates.GamePlaying;
             Time.timeScale = 1f;
+            OnStateChange?.Invoke(state, EventArgs.Empty);
+        }
+    }
+    public void ToggleDig()
+    {
+        digging = !digging;
+        if (digging)
+        {
+            state = GameStates.Digging;
+            gameTime = gameTimer;
+        }
+        else
+        {
+            state = GameStates.GamePlaying;
+            gameTimer = gameTime;
             OnStateChange?.Invoke(state, EventArgs.Empty);
         }
     }

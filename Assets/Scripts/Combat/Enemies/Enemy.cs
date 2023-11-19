@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour, IAttackable
     public int Hp { get; set; }
     public int AttackPower {  get; private set; }
     public int BlockPower {  get; private set; }
-    public MovementSpeed MovementSpeed { get; private set; }
+    public float MovementSpeed { get; private set; }
     public float AttackSpeed { get; private set; }
 
 
@@ -37,8 +37,8 @@ public class Enemy : MonoBehaviour, IAttackable
         Hp = enemyBase.MaxHp;
         AttackPower = enemyBase.AttackPower * statMultiplier;
         BlockPower = enemyBase.BlockPower * statMultiplier;
-        MovementSpeed = enemyBase.MovementSpeed;
-        AttackSpeed = enemyBase.GetAttackSpeed(enemyBase.AttackSpeed);
+        MovementSpeed = enemyBase.CalculateSpeed(enemyBase.MovementSpeed);
+        AttackSpeed = enemyBase.CalculateSpeed(enemyBase.AttackSpeed);
     }
 
 
@@ -50,6 +50,12 @@ public class Enemy : MonoBehaviour, IAttackable
     }
     public void ReceiveDamage(int damage)
     {
+        damage -= BlockPower;
+        if(damage <= 0)
+        {
+            damage = 1;
+            Debug.Log("block too high or damage too low");
+        }
         Hp -= damage;
         if(Hp <= 0)
         {

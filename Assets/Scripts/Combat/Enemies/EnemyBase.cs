@@ -14,8 +14,8 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] private int maxHp;
     [SerializeField] private int attackPower;
     [SerializeField] private int blockPower;
-    [SerializeField] private MovementSpeed movementSpeed;
-    [SerializeField] private AttackSpeed attackSpeed;
+    [SerializeField] private Speed movementSpeed;
+    [SerializeField] private Speed attackSpeed;
 
 
 
@@ -26,32 +26,32 @@ public class EnemyBase : MonoBehaviour
     public int MaxHp => maxHp;
     public int AttackPower => attackPower;
     public int BlockPower => blockPower;
-    public MovementSpeed MovementSpeed => movementSpeed;
-    public AttackSpeed AttackSpeed => attackSpeed;
+    public Speed MovementSpeed => movementSpeed;
+    public Speed AttackSpeed => attackSpeed;
 
 
 
-    public float GetAttackSpeed(AttackSpeed speed)
+    public float CalculateSpeed(Speed speed)
     {
         float calculatedSpeed = 0f;
 
-        if(attackSpeed == AttackSpeed.verySlow)
+        if(attackSpeed == Speed.verySlow)
         {
             calculatedSpeed = 3f;
         }
-        else if(attackSpeed == AttackSpeed.slow)
+        else if(attackSpeed == Speed.slow)
         {
             calculatedSpeed = 2f;
         }
-        else if(attackSpeed == AttackSpeed.average)
+        else if(attackSpeed == Speed.average)
         {
             calculatedSpeed = 1f;
         }
-        else if(attackSpeed == AttackSpeed.fast)
+        else if(attackSpeed == Speed.fast)
         {
             calculatedSpeed = 0.75f;
         }
-        else if(attackSpeed == AttackSpeed.veryFast)
+        else if(attackSpeed == Speed.veryFast)
         {
             calculatedSpeed = 0.5f;
         }
@@ -63,14 +63,7 @@ public class EnemyBase : MonoBehaviour
 
 
 
-public enum AttackSpeed
-{
-    verySlow, slow, average, fast, veryFast
-}
-
-
-
-public enum MovementSpeed
+public enum Speed
 {
     verySlow, slow, average, fast, veryFast
 }

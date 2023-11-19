@@ -23,8 +23,8 @@ public class EnemyBaseOld : ScriptableObject
     [SerializeField] private int maxHp;
     [SerializeField] private int attackPower;
     [SerializeField] private int blockPower;
-    [SerializeField] private MovementSpeed movementSpeed;
-    [SerializeField] private AttackSpeed attackSpeed;
+    [SerializeField] private Speed movementSpeed;
+    [SerializeField] private Speed attackSpeed;
 
 
 
@@ -35,8 +35,8 @@ public class EnemyBaseOld : ScriptableObject
     public int MaxHp => maxHp;
     public int AttackPower => attackPower;
     public int BlockPower => blockPower;
-    public MovementSpeed MovementSpeed => movementSpeed;
-    public AttackSpeed AttackSpeed => attackSpeed;
+    public Speed MovementSpeed => movementSpeed;
+    public Speed AttackSpeed => attackSpeed;
 
 
 
