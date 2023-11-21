@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
     public int Hp => hp;
     public int MaxHp => maxHp;
 
+    public int LivesRemaining {  get; private set; }
+    public int EnemiesDefeated { get; private set; }
 
 
     private void Awake()

@@ -24,7 +24,7 @@ public class AttackTargetNavMeshAgent : MonoBehaviour
     [SerializeField] private float waitTime = 4f;
     [SerializeField] private float rotateTime = 2f;
     [SerializeField] private float walkingSpeed;
-    [SerializeField] private float runningSpeed = 9f;
+    [SerializeField] private float runningSpeed;
     [SerializeField] private float stopDistance = 1.0f;
     [SerializeField] private float pauseChaseDistance = 2.5f;
     [SerializeField] private float giveUpChaseDistance = 6f;
@@ -74,9 +74,10 @@ public class AttackTargetNavMeshAgent : MonoBehaviour
     }
     private void Start()
     {
-        walkingSpeed = GetComponent<Enemy>().MovementSpeed;
+        walkingSpeed = enemyScript.MovementSpeed / 2;
+        runningSpeed = enemyScript.MovementSpeed;
         agent.isStopped = false;
-        agent.speed = walkingSpeed;
+        agent.speed = walkingSpeed / 2;
         agent.stoppingDistance = stopDistance;
         SetDestinationFromList();
 

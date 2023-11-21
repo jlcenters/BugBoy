@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour, IAttackable
     [SerializeField] private EnemyBase enemyBase;
     [SerializeField] int statMultiplier;
 
+    public const string MOVEMENT_TXT = "movement";
+    public const string ATTACK_TXT = "attack";
 
 
     //structs that can change in battle
@@ -24,10 +26,11 @@ public class Enemy : MonoBehaviour, IAttackable
     private void Awake()
     {
         enemyBase = GetComponent<EnemyBase>();
+        Init();
     }
     private void Start()
     {
-        Init();
+        //Init();
     }
     
 
@@ -37,8 +40,8 @@ public class Enemy : MonoBehaviour, IAttackable
         Hp = enemyBase.MaxHp;
         AttackPower = enemyBase.AttackPower * statMultiplier;
         BlockPower = enemyBase.BlockPower * statMultiplier;
-        MovementSpeed = enemyBase.CalculateSpeed(enemyBase.MovementSpeed);
-        AttackSpeed = enemyBase.CalculateSpeed(enemyBase.AttackSpeed);
+        MovementSpeed = enemyBase.CalculateSpeed(enemyBase.MovementSpeed, MOVEMENT_TXT);
+        AttackSpeed = enemyBase.CalculateSpeed(enemyBase.AttackSpeed, ATTACK_TXT);
     }
 
 
@@ -59,8 +62,13 @@ public class Enemy : MonoBehaviour, IAttackable
         Hp -= damage;
         if(Hp <= 0)
         {
-            Debug.Log("dead");
+            Debug.Log("enemy died");
             Destroy(gameObject);
+            if(enemyBase.EnemyType == EnemyType.spider)
+            {
+                GameController.Instance.WinGame();
+                //win logic
+            }
         }
     }
 }

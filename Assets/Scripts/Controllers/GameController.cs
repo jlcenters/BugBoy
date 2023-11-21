@@ -15,6 +15,7 @@ public enum GameStates
     InDialogue,
     InHatWheel,
     Digging,
+    WinGame
 }
 
 
@@ -26,9 +27,9 @@ public class GameController : MonoBehaviour
     public event EventHandler OnStateChange;
 
     private GameStates state;
-    [SerializeField] private float waitingTimer = 1f;
+    [SerializeField] private float waitingTimer = 0.5f;
     [SerializeField] private float gameTimer = 0f;
-    private float gameTime = 0f;
+    [SerializeField] private float gameTime = 0f;
     private bool gamePaused = false;
     private bool inDialogue = false;
     private bool hatWheel = false;
@@ -96,6 +97,9 @@ public class GameController : MonoBehaviour
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
             case GameStates.GameOver:
+                OnStateChange?.Invoke(state, EventArgs.Empty);
+                break;
+            case GameStates.WinGame:
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
         }
@@ -189,5 +193,10 @@ public class GameController : MonoBehaviour
             gameTimer = gameTime;
             OnStateChange?.Invoke(state, EventArgs.Empty);
         }
+    }
+    public void WinGame()
+    {
+        state = GameStates.WinGame;
+        OnStateChange?.Invoke(state, EventArgs.Empty);
     }
 }

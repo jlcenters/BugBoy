@@ -17,6 +17,14 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] private Speed movementSpeed;
     [SerializeField] private Speed attackSpeed;
 
+    [Header("Movement Speeds for Testing")]
+    [SerializeField] private float verySlow;
+    [SerializeField] private float slow;
+    [SerializeField] private float average;
+    [SerializeField] private float fast;
+    [SerializeField] private float veryFast;
+
+
 
 
     public string EnemyName => enemyName;
@@ -31,33 +39,42 @@ public class EnemyBase : MonoBehaviour
 
 
 
-    public float CalculateSpeed(Speed speed)
+    public float CalculateSpeed(Speed speed, string type)
     {
-        float calculatedSpeed = 0f;
-
-        if(attackSpeed == Speed.verySlow)
+        switch (type)
         {
-            calculatedSpeed = 3f;
+            case Enemy.MOVEMENT_TXT:
+                switch (speed)
+                {
+                    case Speed.verySlow:
+                        return verySlow;
+                    case Speed.slow:
+                        return slow;
+                    case Speed.average:
+                        return average;
+                    case Speed.fast:
+                        return fast;
+                    case Speed.veryFast:
+                        return veryFast;
+                }
+                break;
+            case Enemy.ATTACK_TXT:
+                switch (speed)
+                {
+                    case Speed.verySlow:
+                        return 3f;
+                    case Speed.slow:
+                        return 2f;
+                    case Speed.average:
+                        return 1f;
+                    case Speed.fast:
+                        return 0.75f;
+                    case Speed.veryFast:
+                        return 0.5f;
+                }
+                break;
         }
-        else if(attackSpeed == Speed.slow)
-        {
-            calculatedSpeed = 2f;
-        }
-        else if(attackSpeed == Speed.average)
-        {
-            calculatedSpeed = 1f;
-        }
-        else if(attackSpeed == Speed.fast)
-        {
-            calculatedSpeed = 0.75f;
-        }
-        else if(attackSpeed == Speed.veryFast)
-        {
-            calculatedSpeed = 0.5f;
-        }
-
-
-        return calculatedSpeed;
+        return 0f;
     }
 }
 

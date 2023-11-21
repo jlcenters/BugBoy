@@ -41,7 +41,7 @@ public class Inventory : MonoBehaviour
     public Dictionary<HatType, bool> hats = new();
     //TODO: active tool
 
-    /*public int Flies { get { return flies; } set { flies = value; } }
+    /*public int Flies { get { return flies; } private set { flies = value; } }
     public int Tokens { get { return tokens; } set { tokens = value; } }
     public int Badges { get { return badges; } set { badges = value; } }
     public int Sprinkles { get { return sprinkles; } set { sprinkles = value; } }
