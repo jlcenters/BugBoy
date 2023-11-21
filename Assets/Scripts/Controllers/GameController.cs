@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour
     public static GameController Instance { get; private set; }
 
     public event EventHandler OnStateChange;
+    //public event Action OnGameOver;
 
     private GameStates state;
     [SerializeField] private float waitingTimer = 0.5f;
@@ -96,12 +97,12 @@ public class GameController : MonoBehaviour
             case GameStates.Digging:
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
-            case GameStates.GameOver:
+            /*case GameStates.GameOver:
                 OnStateChange?.Invoke(state, EventArgs.Empty);
                 break;
             case GameStates.WinGame:
                 OnStateChange?.Invoke(state, EventArgs.Empty);
-                break;
+                break;*/
         }
     }
 
@@ -161,7 +162,9 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("Game Over");
         state = GameStates.GameOver;
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
+        OnStateChange?.Invoke(state, EventArgs.Empty);
+
     }
     private void InputController_OnToggleHatWheel(object sender, EventArgs e)
     {
@@ -197,6 +200,7 @@ public class GameController : MonoBehaviour
     public void WinGame()
     {
         state = GameStates.WinGame;
+        //Time.timeScale = 0f;
         OnStateChange?.Invoke(state, EventArgs.Empty);
     }
 }

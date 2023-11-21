@@ -1655,6 +1655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waitingTimer: 0
   gameTimer: 0
+  gameTime: 0
 --- !u!4 &454939769
 Transform:
   m_ObjectHideFlags: 0
@@ -11449,6 +11450,7 @@ RectTransform:
   - {fileID: 1593151479}
   - {fileID: 853111833}
   - {fileID: 6768721415228560754}
+  - {fileID: 7195760369990803673}
   m_Father: {fileID: 875122728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -11480,13 +11482,17 @@ MonoBehaviour:
   playerScoreString: 
   playerRank: 0
   enemiesDefeatedRank: 0
-  enemiesDefeatedScore: 
+  enemiesDefeatedString: 
+  enemiesDefeatedScore: 0
   fliesCollectedRank: 0
-  fliesCollectedScore: 
+  fliesCollectedString: 
+  fliesCollectedScore: 0
   livesRemainingRank: 0
-  livesRemainingScore: 
+  livesRemainingString: 
+  livesRemainingScore: 0
   timeToCompleteRank: 0
-  timeToCompleteScore: 
+  timeToCompleteString: 
+  timeToCompleteScore: 0
   enemiesDefeatedText: {fileID: 208511860059885909}
   fliesCollectedText: {fileID: 2328029797737201907}
   livesRemainingText: {fileID: 4415239099697316649}
@@ -18770,6 +18776,7 @@ RectTransform:
   - {fileID: 1053229744}
   - {fileID: 344983957}
   - {fileID: 7143514020146644971}
+  - {fileID: 6706406895520363072}
   m_Father: {fileID: 875122728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -18801,13 +18808,17 @@ MonoBehaviour:
   playerScoreString: 
   playerRank: 0
   enemiesDefeatedRank: 0
-  enemiesDefeatedScore: 
+  enemiesDefeatedString: 
+  enemiesDefeatedScore: 0
   fliesCollectedRank: 0
-  fliesCollectedScore: 
+  fliesCollectedString: 
+  fliesCollectedScore: 0
   livesRemainingRank: 0
-  livesRemainingScore: 
+  livesRemainingString: 
+  livesRemainingScore: 0
   timeToCompleteRank: 0
-  timeToCompleteScore: 
+  timeToCompleteString: 
+  timeToCompleteScore: 0
   enemiesDefeatedText: {fileID: 4335066528128517068}
   fliesCollectedText: {fileID: 2198700689821831786}
   livesRemainingText: {fileID: 255470383837598128}
@@ -22244,7 +22255,7 @@ GameObject:
   - component: {fileID: 7143514020146644971}
   - component: {fileID: 309619646682418021}
   m_Layer: 5
-  m_Name: UI
+  m_Name: Layout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23317,9 +23328,9 @@ MonoBehaviour:
   description: Final Boss; strong and durable but very slow; spawns baby spiders
   enemyPrefab: {fileID: 0}
   enemyType: 2
-  maxHp: 2
-  attackPower: 1
-  blockPower: 1
+  maxHp: 50
+  attackPower: 50
+  blockPower: 50
   movementSpeed: 0
   attackSpeed: 1
   verySlow: 3
@@ -23949,12 +23960,12 @@ RectTransform:
   m_Children:
   - {fileID: 2669420553818293931}
   - {fileID: 6193699185739156773}
-  m_Father: {fileID: 7143514020146644971}
+  m_Father: {fileID: 1717467209}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1280, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 665, y: -632.20746}
+  m_SizeDelta: {x: 1280, y: 175.58499}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6706841863055643467
 GameObject:
@@ -24051,13 +24062,12 @@ RectTransform:
   - {fileID: 106412017283755618}
   - {fileID: 4627233799079470007}
   - {fileID: 4210323564962774626}
-  - {fileID: 7195760369990803673}
   m_Father: {fileID: 1247913494}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 260}
-  m_SizeDelta: {x: 0, y: 520}
+  m_AnchoredPosition: {x: 0, y: 350}
+  m_SizeDelta: {x: 0, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6772369844247972968
 GameObject:
@@ -24342,13 +24352,12 @@ RectTransform:
   - {fileID: 4591284919117675771}
   - {fileID: 9149824584534077742}
   - {fileID: 334280796717575419}
-  - {fileID: 6706406895520363072}
   m_Father: {fileID: 1717467209}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 260}
-  m_SizeDelta: {x: 0, y: 520}
+  m_AnchoredPosition: {x: 0, y: 350}
+  m_SizeDelta: {x: 0, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &7195760369990803673
 RectTransform:
@@ -24364,12 +24373,12 @@ RectTransform:
   m_Children:
   - {fileID: 2001330777835263026}
   - {fileID: 7726480399412617148}
-  m_Father: {fileID: 6768721415228560754}
+  m_Father: {fileID: 1247913494}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1280, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 665, y: -636.8625}
+  m_SizeDelta: {x: 1280, y: 166.275}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7196458941163536850
 GameObject:

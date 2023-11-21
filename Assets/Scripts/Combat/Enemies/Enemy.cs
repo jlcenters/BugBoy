@@ -49,7 +49,11 @@ public class Enemy : MonoBehaviour, IAttackable
     //IAttackable Methods
     public void DamagePlayer(PlayerController player)
     {
-        player.TakeDamage(AttackPower);
+        if(GameController.Instance.IsActiveState(GameStates.GamePlaying))
+        {
+            player.TakeDamage(AttackPower);
+
+        }
     }
     public void ReceiveDamage(int damage)
     {

@@ -47,13 +47,17 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] private string playerScoreString;
     [SerializeField] private ScoreRank playerRank;
     [SerializeField] private ScoreRank enemiesDefeatedRank;
-    [SerializeField] private string enemiesDefeatedScore;
+    [SerializeField] private string enemiesDefeatedString;
+    [SerializeField] private float enemiesDefeatedScore;
     [SerializeField] private ScoreRank fliesCollectedRank;
-    [SerializeField] private string fliesCollectedScore;
+    [SerializeField] private string fliesCollectedString;
+    [SerializeField] private float fliesCollectedScore;
     [SerializeField] private ScoreRank livesRemainingRank;
-    [SerializeField] private string livesRemainingScore;
+    [SerializeField] private string livesRemainingString;
+    [SerializeField] private float livesRemainingScore;
     [SerializeField] private ScoreRank timeToCompleteRank;
-    [SerializeField] private string timeToCompleteScore;
+    [SerializeField] private string timeToCompleteString;
+    [SerializeField] private float timeToCompleteScore;
 
     [Header("UI Objects")]
     [SerializeField] private TextMeshProUGUI enemiesDefeatedText;
@@ -110,8 +114,6 @@ public class GameOverUI : MonoBehaviour
 
     private void CalculateTotalScore(float timeSpent)
     {
-        float playerCatScore;
-
         //if game won, include time to complete in score
         switch (thisState)
         {
@@ -121,39 +123,42 @@ public class GameOverUI : MonoBehaviour
                 //if it took at max the 100% tier to finish game, set percentage to 1 (max score)
                 if (timeSpent <= perfectTime)
                 {
-                    playerCatScore = 1f;
+                    timeToCompleteScore = 1f;
                 }
                 else
                 {
-                    playerCatScore = perfectTime / timeSpent;
-                    timeToCompleteRank = CalculateRank(playerCatScore);
-                    Debug.Log(playerCatScore + "time");
+                    timeToCompleteScore = perfectTime / timeSpent;
+                    timeToCompleteRank = CalculateRank(timeToCompleteScore);
+                    Debug.Log(timeToCompleteScore + "time");
 
                 }
-                playerScore += Mathf.CeilToInt((maxScorePerCategory * playerCatScore));
-                timeToCompleteScore = "Time Spent: " + timeSpent + " / " + perfectTime + " ... " + timeToCompleteRank; //TODO: set string in mm:ss format
+                playerScore += Mathf.CeilToInt((maxScorePerCategory * timeToCompleteScore));
+                timeToCompleteString = "Time Spent: " + timeSpent + " / " + perfectTime + " ... " + timeToCompleteRank; //TODO: set string in mm:ss format
                 break;
             default: break;
         }
         //enemies defeated
-        playerCatScore = CalculateScoreAndRank((float)(PlayerController.Instance.EnemiesDefeated), perfectEnemiesDefeated, enemiesDefeatedRank);
-        enemiesDefeatedScore = "Enemies Defeated: " + playerCatScore + " / " + perfectEnemiesDefeated + " ... " + enemiesDefeatedRank;
-        Debug.Log(playerCatScore + "enemies");
+        enemiesDefeatedScore = (float)(PlayerController.Instance.EnemiesDefeated) / perfectEnemiesDefeated;
+        enemiesDefeatedRank = CalculateRank(enemiesDefeatedScore);
+        enemiesDefeatedScore = CalculateScore(enemiesDefeatedScore);
+        enemiesDefeatedString = "Enemies Defeated: " + enemiesDefeatedScore + " / " + perfectEnemiesDefeated + " ... " + enemiesDefeatedRank;
 
         //flies collected
-        playerCatScore = CalculateScoreAndRank((float)(PlayerController.Instance.inventory.collectables[CollectableType.Flies]), perfectFliesCollected, fliesCollectedRank);
-        fliesCollectedScore = "Flies Collected: " + playerCatScore + " / " + perfectFliesCollected + " ... " + fliesCollectedRank;
-        Debug.Log(playerCatScore + "flies");
+        fliesCollectedScore = (float)(PlayerController.Instance.inventory.collectables[CollectableType.Flies]) / perfectFliesCollected;
+        fliesCollectedRank = CalculateRank(fliesCollectedScore);
+        fliesCollectedScore = CalculateScore(fliesCollectedScore);
+        fliesCollectedString = "Flies Collected: " + fliesCollectedScore + " / " + perfectFliesCollected + " ... " + fliesCollectedRank;
 
         //lives remaining
-        playerCatScore = CalculateScoreAndRank((float)(PlayerController.Instance.LivesRemaining), perfectLivesRemaining, livesRemainingRank);
-        livesRemainingScore = "Lives Remaining: " + playerCatScore + " / " + perfectLivesRemaining + " ... " + livesRemainingRank;
-        Debug.Log(playerCatScore + "lives");
+        livesRemainingScore = (float)(PlayerController.Instance.LivesRemaining) / perfectLivesRemaining;
+        livesRemainingRank = CalculateRank(livesRemainingScore);
+        livesRemainingScore = CalculateScore(livesRemainingScore);
+        livesRemainingString = "Lives Remaining: " + livesRemainingScore + " / " + perfectLivesRemaining + " ... " + livesRemainingRank;
 
         //player total score
         playerRank = CalculateRank(playerScore / perfectScore);
         playerScoreString = "Total: " + playerScore + " / " + perfectScore + " ... " + playerRank;
-        Debug.Log(playerCatScore + "total");
+        Debug.Log(playerScore + "total" + " and " + playerRank + " rank");
 
 
     }
@@ -185,16 +190,12 @@ public class GameOverUI : MonoBehaviour
             return ScoreRank.S;
         }
     }
-
     //cannot use on time score because it references a maximum value
-    private float CalculateScoreAndRank(float playerTotal, float maxTotal, ScoreRank playerRank)
+    private float CalculateScore(float percentage)
     {
-        float finalScorePercentage = playerTotal / maxTotal;
         //increase player score
-        playerScore += Mathf.CeilToInt(maxScorePerCategory * finalScorePercentage);
-        //set specified rank depending on score
-        playerRank = CalculateRank(finalScorePercentage);
-        return finalScorePercentage;
+        playerScore += Mathf.CeilToInt(maxScorePerCategory * percentage);
+        return percentage;
     }
 
     private void ClearUI()
@@ -209,17 +210,17 @@ public class GameOverUI : MonoBehaviour
     private IEnumerator SetUI()
     {
         //set new values, with a slight pause between each value
-        enemiesDefeatedText.text = enemiesDefeatedScore;
+        enemiesDefeatedText.text = enemiesDefeatedString;
         yield return new WaitForSeconds(0.25f);
-        fliesCollectedText.text = fliesCollectedScore;
+        fliesCollectedText.text = fliesCollectedString;
         yield return new WaitForSeconds(0.25f);
-        livesRemainingText.text = livesRemainingScore;
+        livesRemainingText.text = livesRemainingString;
         yield return new WaitForSeconds(0.25f);
 
         //only set time score if game was won
         if(thisState == GameStates.WinGame)
         {
-            timeToCompleteText.text = timeToCompleteScore;
+            timeToCompleteText.text = timeToCompleteString;
         }
         else
         {
